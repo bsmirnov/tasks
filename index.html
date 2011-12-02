@@ -99,17 +99,15 @@
 				position:relative;
 				clear:both;
 				overflow:hidden;
-				background:#f0f0f0;
+				
 
 			}
 
-			.task .task {
+			.task > .task {
 				
-				margin:10px;
-				display:none;
-				background:#fff;
-				border:1px solid #ccc;
-
+				
+				margin-left:5px;
+				border-left:5px solid #ccc;
 			}
 
 			.task .task > header {
@@ -126,17 +124,17 @@
 
 			}
 
-			.selected .task {
+			.selected>.task {
 				
 				display:block;
 
 			}
 
-			.task .history {
+			.task>.history {
 				display:none;
 				background:#fff;	
 			}
-			.selected .history { 
+			.selected > .history { 
 
 				display:block; 
 		
@@ -154,7 +152,7 @@
 
 			}
 
-			.selected .history:before {
+			.selected > .history:before {
 				
 
 			}
@@ -182,29 +180,34 @@
 			}
 
 			.task > header { margin:5px; float:left;}
-			.task h2 {color:#222;}
-			.task section {
+			.task  h2 {color:#222;}
+			.task > section {
 				
 				float:left;
 
 			}
 
-			.task .meta {
-				float:right;
-				margin:10px;
+			.task > .meta {
+					
+					position:absolute;
+					right:10px;
+					top:0px;
+				margin:0px;
 			
 			}
 
-			.selected .meta li,
-			.task:hover .meta li{
+			.selected > .meta li,
+			.task:hover > .meta li{
 				
 				display:block;
 
 			}
 
-			.due-date li.due-date {
+			.due-date > .meta li.due-date {
 				
 				display:block;
+				color:#fff;
+
 
 			}
 
@@ -240,7 +243,8 @@
 
 			.action a:hover {
 				
-				background:#fff;
+				background:#eee;
+				box-shadow:0 0 3px #999;
 
 			}
 
@@ -382,7 +386,9 @@
 	 				$("#time_edit").focus();
 	 				break;
 	 				case 40: //Down
+	 			
 	 				$(".selected").next().click();
+
 	 				break;
 	 				case 38: //Up
 	 				$(".selected").prev(".task").click();
@@ -667,7 +673,51 @@
 							</ul><!-- / -->
 						
 					</section><!-- / -->	
+					<article id="" class="task active due-date">
+				<header >
+					<h2>Do some thing </h2>
+				</header>
+					<section class="description">
+						
+					</section><!-- / -->
+					
+					
+					<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+							<li class="repeats"><a href="#" title="">Weekly</a></li>
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+					<section class="history">
+					<header>
+						<h3>Task History</h3>
+					</header><!-- /header -->
+							<ul>
+								<li>
+								<span class="date">October 11st, 2011</span>
+								<span class="action">Created </span>
+								</li>
+								<li>
+								<span class="date">October 22st, 2011</span>
+								<span class="action">2 Hours Logged</span>
+								<span class="note">Working on particular aspect</span>
+								</li>
+								<li>
+								<span class="date">October 31st, 2011</span>
+								<span class="action">1 Hours Logged</span>
+								<span class="note">Documentation</span>
+								</li>
+							</ul><!-- / -->
+						
+					</section><!-- / -->	
 				
+			</article><!-- / -->
 			</article><!-- / -->
 			<article id="" class="task new-task">
 			<header >
