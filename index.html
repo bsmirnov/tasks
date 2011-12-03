@@ -5,348 +5,220 @@
 		<title>My Stuff</title>
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="animate.css">
-		<style type="text/css" media="screen">
-			body {
-				color:#444;
-				font-family:trebuschet ms, helvetica, arial, sans-serif;
-			}
-
-			a {color:#222;}
-
-			body > header {
-				
-				padding:5px;
-				background:#444;
-			}
-
-			h1 { font-size:90%; margin:5px;color:#eee;}
-			h2 { font-size:80%; color:#999; margin:5px;}
-
-			.add-task,
-			#enter-time {
-
-
-				position:relative;
-			
-				margin:10px;
-				border:1px solid #ccc;
-				
-				display:none;
-
-				background-color: whiteSmoke;
-				margin-bottom: 20px;
-				padding: 10px;
-				min-height: 20px;
-				border: 1px solid #EEE;
-				border: 1px solid rgba(0, 0, 0, 0.05);
-				-webkit-border-radius: 4px;
-				-moz-border-radius: 4px;
-				border-radius: 4px;
-				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-				-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-
-
-
-			}
-
-			
-			.add-task .extra {
-				
-				display:none;
-
-			}
-
-			.add-task input[type=text]
-			{
-				
-				width:400px;
-				font-size:120%;
-			
-
-			}
-
-			.add-task button + label {
-				
-				font-size:80%;
-				color:#ccc;
-				display:block;
-				font-style:italic;
-
-
-
-			}
-
-			.add-task button {
-				
-				font-size:150%;
-				opacity:0;
-
-			}
-
-			.add-task form {
-				
-				margin-left:50px;
-
-			}
-
-			
-			#enter-time #time_edit { width: 40px;}
-
-			.task {
-				
-				border:1px solid #eee;
-				position:relative;
-				clear:both;
-				overflow:hidden;
-				
-
-			}
-
-			.task > .task {
-				
-				
-				margin-left:5px;
-				border-left:5px solid #ccc;
-			}
-
-			.task .task > header {
-				
-				margin:5px;
-
-			}
-
-
-
-			.task.complete > header {
-				
-				text-decoration: line-through;
-
-			}
-
-			.selected>.task {
-				
-				display:block;
-
-			}
-
-			.task>.history {
-				display:none;
-				background:#fff;	
-			}
-			.selected > .history { 
-
-				display:block; 
+		<link rel="stylesheet" href="tasks.css">
 		
-			
-				background:#fff;
-				margin:20px;
-			
-
-			}
-
-			.selected {
-				
-				background:#efc;
-				box-shadow:-0px 0 3px #999 inset;
-
-			}
-
-			.selected > .history:before {
-				
-
-			}
-
-			.history {
-				clear:left;
-				color:#999;
-				font-size:75%;
-				position:fixed;
-				bottom:0;
-				width:100%;
-			}
-
-			.history header
-			{
-				
-				display:none;
-
-			}
-
-			.history li {
-				
-				margin:5px;
-
-			}
-
-			.task > header { margin:5px; float:left;}
-			.task  h2 {color:#222;}
-			.task > section {
-				
-				float:left;
-
-			}
-
-			.task > .meta {
-					
-					position:absolute;
-					right:10px;
-					top:0px;
-				margin:0px;
-			
-			}
-
-			.selected > .meta li,
-			.task:hover > .meta li{
-				
-				display:block;
-
-			}
-
-			.due-date > .meta li.due-date {
-				
-				display:block;
-				color:#fff;
-
-
-			}
-
-
-
-			.actions li,
-			.meta li,
-			.history li
-			{ list-style-type:none;}
-
-			.actions li,
-			.meta li {
-				display:none;
-				float:left;
-				margin-left:3px;
-
-			}
-
-			.meta  {
-				
-				font-size:45%;
-
-			}
-
-			.meta li a { 
-				display:block;
-				
-				padding:3px;
-				text-decoration:none;
-				text-transform:uppercase;
-
-			}
-
-			.action a:hover {
-				
-				background:#eee;
-				box-shadow:0 0 3px #999;
-
-			}
-
-			.new-task {
-				border:1px dashed #eee;
-				position:relative;
-				clear:both;
-				overflow:hidden;
-				background:#ddd;
-			}
-
-			.new-task.selected
-			{
-				background:#efc;
-				border:2px dashed #999;
-			}
-
-			.new-task.selected header {
-				
-				margin:3px;
-
-			}
-
-			.new-task.selected h2:before {
-
-				content:"+ ";
-
-				
-			}
-
-			.new-task > header {
-				
-				font-style: italic;
-				color:#999;
-				margin:5px;
-
-			}
-
-			#tasks {}
-
-			#contexts {
-				
-				margin:5px;
-				border:1px solid #ccc;
-				box-shadow:0 0 5px #aaa;
-
-			}
-
-			#contexts li {
-				list-style-type:none;
-
-			}
-
-			.context {
-			
-				background:#eee;
-					
-
-			}
-
-			.context a{
-				
-				padding:5px;
-				margin:1px;
-				display:block;
-				font-size:60%;
-				text-decoration:none;
-				text-transform:uppercase;
-				font-weight:bold;
-				color:666;
-
-			}
-
-			.context.active {
-				
-				background:#cfe;
-
-			}
-
-			.context a:before {
-				
-				content: "@";
-				color:#999;
-
-			}
-
-
-
-
-		</style>
 
 		<script src="jquery-1.7.min.js"></script>   
 
 		<script type="text/javascript" charset="utf-8">
+		function guidGenerator() {
+		    var S4 = function() {
+		       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+		    };
+		    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+		}
+		var today=new Date();
+		var tasks = {
+			settings: {
+				subtasks:false,
+				session:guidGenerator(),
+			},
+			themes: [],
+			contexts: [],
+			priority:["someday","low","medium","high"],
+			months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+			weekdays:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+			year:2011,
+			//Posible Actions
+			actions:["Created","Time Logged","Done","Deleted","Updated"],
+			metas:[
+					{
+						
+						name:"Complete",
+						type:"action"
+						//callback:tasks.complete(task)
+					},
+					{
+						
+						name:"Log Time",
+						type:"action"
+						//callback:tasks.logTime()
+					},
+					{
+						name:"Context",
+						type:"action"
+						//callback:switchContext()
+
+					},
+					{
+						name:"Due Date",
+						type:"display"
+					}
+
+
+				],
+
+
+
+			init: function(){
+				
+				//$(".task").on("click",);
+				$(document).on("click", ".task", function(event){$(".task").removeClass("selected");$(this).addClass("selected")});
+				$("#add-task-form").on("submit",function(e){
+					e.preventDefault();
+					var txt = $("#add-task-input").val().trim()
+					console.log(tasks.parseTask(txt).task);
+					tasks.addTask(tasks.parseTask(txt).task);
+
+					$("#add-task-input").val("");
+				});
+
+				if(tasks.settings.subtasks)
+					{
+						
+						$("body").addClass("with-subtasks");
+
+					}
+				
+				tasks.loadTasks();
+				tasks.loadContexts();
+
+				for (var item in tasks.metas) {
+				  //console.log(tasks.metas[item]["name"]);
+				}
+
+				for (var item in tasks.actions) {
+				  //console.log(tasks.actions[item]);
+				}
+			},
+
+			loadTasks: function(){
+				//Load tasks start with fixture
+			},
+
+			loadContexts: function(){
+				//Load Extra Contexts
+				tasks.contexts = ["Work 2","Home 3","Someda 3","Learning 3"];
+				$.each(tasks.contexts, function(index,value){
+					$("#contexts .list").append("<li class='context'><a href='#"+value+"'>"+value+"</li>");
+				});
+			},
+
+			addTask: function(name){
+				var guid = guidGenerator();
+				var t = $("<article id='"+ guid +"' class='task active'></article>");
+
+				$("<h2>"+name+"</h2>").appendTo(t).wrap("<header></header>");
+
+
+				var history=$('<section class="history"></section>');
+
+				var log_header=$('<header>\
+								<h3>Task History</h3>\
+								</header>');
+				var log=$('<li id="'+guid+'">\
+					<span class="date">'+tasks.months[today.getMonth()]+" "+today.getDate()+", "+today.getFullYear()+'</span>\
+					<span class="action">Created</span> \
+								</li>').wrap("<ul></ul>");
+
+				$(history).append(log_header).append(log).appendTo(t);
+				
+				$('#tasks').prepend(t);
+
+			},
+
+			parseTask: function(task){
+
+				//Scheduled/Unscheduled
+				var re = new RegExp(/^\-/i);
+				var s = task.match(re) ? "U" : "S";
+				task = task.replace(re,"").trim();
+
+				// console.log(s);
+				// console.log(task);
+				
+				//Parse for context
+				var re = new RegExp(/@\w+/i);
+				var c = task.match(re);
+				task = task.replace(re,"").trim();
+
+				// console.log(c);
+				// console.log(task);
+
+				//Parse for priority
+				var re = new RegExp(/(!)(\w+)/i);
+				var i = task.match(re);
+				task = task.replace(re,"").trim();
+
+				// console.log(i);
+				// console.log(task);
+
+				//Parse for Day
+				var re = new RegExp(/Today|Tommorow|Monday|Tuesday|Wednesday|Thursday|Friday|Next\sWeek/i);
+				var w = task.match(re);
+				task = task.replace(re,"").trim();
+
+				// console.log(w);
+				// console.log(task);
+
+				//Parse for due:
+				
+				var re = new RegExp(/(on:)(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)(\s)(\d{1,2})/i);
+				var day = task.match(re);
+				task = task.replace(re,"").trim();
+				if(day)
+				{
+				date = new Date(day[2]+" "+day[4]+" "+today.getFullYear());
+				
+				var one_day=1000*60*60*24; //Seconds
+
+				days_until= Math.ceil((date.getTime()-today.getTime())/(one_day));
+
+				// console.log(day);
+				//console.log(null ? date.getFullYear() : "");
+				// console.log("For " + tasks.weekdays[date.getDay()]);
+				// console.log("Days Until " + days_until);
+				// console.log(task);
+				}
+
+
+
+				return  {
+					"task":task,
+					"meta":{
+					"context":null ? c[0].replace("@","") : "Misc",
+					"importance":null ?i[2].replace("!","") : 0,
+					"weekday":w,
+					"due_in":null ? days_until : null,
+					"raw_date":null ? date : null
+						}
+					}
+				
+			},
+
+			
+
+			logTime: function(){}
+
+
+			
+			
+
+
+		}
+		</script>
+
+		<script type="text/javascript" charset="utf-8">
 
 			document.onkeyup = KeyCheck;       
- 
+ 			
 			
 
 		$(function() {
 			
-			$(".task").click(function(){$(".task").removeClass("selected");$(this).addClass("selected")});
+			tasks.init();
+
+			
 			$(".task:first").click();
 
 			$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
@@ -357,6 +229,8 @@
 				getTasks();
 
 			});
+
+
 
 		});
 
@@ -482,7 +356,10 @@
 		</script>
 
 	</head>
-	<body>
+	<body class="theme-gr">
+	<article id="container">
+		
+	
 	<header>
 		<hgroup>
 				<h1>My Stuff</h1>
@@ -495,7 +372,7 @@
 			<h2>Add task</h2>
 			
 		</header><!-- /header -->
-		<form action="#" method="get" accept-charset="utf-8">
+		<form action="#" method="get" id="add-task-form" accept-charset="utf-8">
 			<input type="text" id="add-task-input" name="add-task" value="" placeholder="Type Task name" accesskey="n"> 
 			<label for="add-task">Enter the task you can add context by using @CONTEXT</label>
 		
@@ -740,6 +617,6 @@
 				<li class="context"><a href="#" title="">Misc</a></li>
 			</ul><!-- / -->
 		</section><!-- / -->
-		
+		</article><!-- / -->
 	</body>
 </html>

@@ -1,0 +1,357 @@
+body {
+				color:#444;
+				font-family:trebuschet ms, helvetica, arial, sans-serif;
+			}
+
+			a {color:#222;}
+
+			#container > header {
+				
+				padding:5px;
+				background:#444;
+				text-shadow:0 2px 3px #444;
+			}
+
+ 			header{
+ 				
+ 			}
+
+			h1 { font-size:90%; margin:5px;color:#eee;}
+			h2 { font-size:80%; color:#999; margin:5px;}
+
+			#container {
+				
+				background:#7b8996;
+
+			}
+
+			.add-task,
+			#enter-time {
+
+
+				position:relative;
+			
+				margin:10px;
+				border:1px solid #ccc;
+				
+				display:none;
+
+				background-color: whiteSmoke;
+				margin-bottom: 20px;
+				padding: 10px;
+				min-height: 20px;
+				border: 1px solid #EEE;
+				border: 1px solid rgba(0, 0, 0, 0.05);
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				border-radius: 4px;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+				-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+
+
+
+			}
+
+			
+			.add-task .extra {
+				
+				display:none;
+
+			}
+
+			.add-task input[type=text]
+			{
+				
+				width:400px;
+				font-size:120%;
+			
+
+			}
+
+			.add-task button + label {
+				
+				font-size:80%;
+				color:#ccc;
+				display:block;
+				font-style:italic;
+
+
+
+			}
+
+			.add-task button {
+				
+				font-size:150%;
+				opacity:0;
+
+			}
+
+			.add-task form {
+				
+				margin-left:50px;
+
+			}
+
+			
+			#enter-time #time_edit { width: 40px;}
+
+			.task {
+				
+				border:1px solid #eee;
+				background:#fff;
+				position:relative;
+				clear:both;
+				overflow:hidden;
+				margin:5px;
+				border-radius:5px;
+				box-shadow:0px 5px 5px rgba(77,77,77,.25);
+				
+
+			}
+
+			
+
+
+			.task.complete > header {
+				
+				text-decoration: line-through;
+
+			}
+
+			.selected>.task {
+				
+				display:block;
+
+			}
+
+			.task>.history {
+				display:none;
+				background:#fff;	
+			}
+			.selected > .history { 
+
+				display:block; 
+		
+			
+				background:#fff;
+				margin:20px;
+			
+
+			}
+
+			.selected {
+				
+				background:#efc;
+
+			}
+
+			.selected > .history:before {
+				
+
+			}
+
+			.history {
+				clear:left;
+				color:#999;
+				font-size:75%;
+				position:fixed;
+				bottom:0;
+				width:100%;
+			}
+
+			.history header
+			{
+				
+				display:none;
+
+			}
+
+			.history li {
+				
+				margin:5px;
+
+			}
+
+			.task > header { margin:5px; float:left;}
+			.task  h2 {color:#222;}
+			.task > section {
+				
+				float:left;
+
+			}
+
+			.task > .meta {
+					
+					position:absolute;
+					right:10px;
+					top:0px;
+				margin:0px;
+			
+			}
+
+			.selected > .meta li,
+			.task:hover > .meta li{
+				
+				display:block;
+
+			}
+
+			.due-date > .meta li.due-date {
+				
+				display:block;
+				color:#fff;
+
+
+			}
+
+
+
+			.actions li,
+			.meta li,
+			.history li
+			{ list-style-type:none;}
+
+			.actions li,
+			.meta li {
+				display:none;
+				float:left;
+				margin-left:3px;
+
+			}
+
+			.meta  {
+				
+				font-size:45%;
+
+			}
+
+			.meta li a { 
+				display:block;
+				
+				padding:3px;
+				text-decoration:none;
+				text-transform:uppercase;
+
+			}
+
+			.action a:hover {
+				
+				background:#eee;
+				box-shadow:0 0 3px #999;
+
+			}
+
+			.new-task {
+				border:1px dashed #eee;
+				position:relative;
+				clear:both;
+				overflow:hidden;
+				background:#ddd;
+			}
+
+			.new-task.selected
+			{
+				background:#efc;
+				border:2px dashed #999;
+			}
+
+			.new-task.selected header {
+				
+				margin:3px;
+
+			}
+
+			.new-task.selected h2:before {
+
+				content:"+ ";
+
+				
+			}
+
+			.new-task > header {
+				
+				font-style: italic;
+				color:#999;
+				margin:5px;
+
+			}
+
+			#tasks {}
+
+			#contexts {
+				
+				margin:5px;
+				border:1px solid #ccc;
+				box-shadow:0 0 5px #aaa;
+
+			}
+
+			#contexts li {
+				list-style-type:none;
+
+			}
+
+			.context {
+			
+				background:#eee;
+					
+
+			}
+
+			.context a{
+				
+				padding:5px;
+				margin:1px;
+				display:block;
+				font-size:60%;
+				text-decoration:none;
+				text-transform:uppercase;
+				font-weight:bold;
+				color:666;
+
+			}
+
+			.context.active {
+				
+				background:#cfe;
+
+			}
+
+			.context a:before {
+				
+				content: "@";
+				color:#999;
+
+			}
+
+/*Subtasks*/
+.task > .task { display:none;}
+.with-subtasks .task > .task {
+				
+				display:block;
+				margin-left:5px;
+				border-left:5px solid #ccc;
+			}
+
+			.task .task > header {
+				
+				margin:5px;
+
+			}
+
+
+.theme-gr #tasks {
+float: left;
+width: 61.8%;
+margin-right: 0px;
+min-width: 420px;
+}
+
+.theme-gr #contexts {
+margin: 5px;
+border: 1px solid #CCC;
+box-shadow: 0 0 5px #aaa;
+float: right;
+width: 35.5%;
+}
