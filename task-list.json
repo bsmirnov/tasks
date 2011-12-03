@@ -1,0 +1,19 @@
+{tasks:[{
+	id:"",
+	name:"Remember the Milk",
+	description:"When coming home get some cream and som 2% Milk as well as some tomatoes",
+	context:"Home",
+	due:"Oct 12",
+	status:"active",
+
+	log:[{
+		date:"",
+		action:"",
+		text:"",
+		time:""
+	}]
+
+}]}
+
+
+//task.log.add

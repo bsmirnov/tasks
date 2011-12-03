@@ -1,15 +1,46 @@
 body {
 				color:#444;
 				font-family:trebuschet ms, helvetica, arial, sans-serif;
+				-webkit-transition: all 1s ease-in-out;
+				background:#7B8996;
+				background:#fff;
 			}
+
+body.command-mode {
+	
+	background:#444;
+
+}
+
+ #command {
+	
+	display:none;
+	-webkit-transition: all 1s ease-in-out;
+	height:0px;
+
+}
+
+.command-mode #command {
+	
+	display:block;
+	min-height: 30px;
+	height:30px;
+	background:#222;
+	-webkit-transition: all 1s ease-in-out;
+	
+}
+
+
 
 			a {color:#222;}
 
 			#container > header {
 				
 				padding:5px;
-				background:#444;
-				text-shadow:0 2px 3px #444;
+/*				background:#444;
+				text-shadow:0 2px 3px #444;*/
+
+				text-shadow:0 0px 1px #444;
 			}
 
  			header{
@@ -21,9 +52,16 @@ body {
 
 			#container {
 				
-				background:#7b8996;
+				
+				max-width:980px;
+				margin:0 auto;
+				overflow:hidden;
+				-webkit-transition: all 1s ease-in-out;
+
 
 			}
+
+			
 
 			.add-task,
 			#enter-time {
@@ -102,16 +140,34 @@ body {
 				background:#fff;
 				position:relative;
 				clear:both;
-				overflow:hidden;
 				margin:5px;
 				border-radius:5px;
-				box-shadow:0px 5px 5px rgba(77,77,77,.25);
-				
+				box-shadow:0 0 0 1px #ddd, 0px 1px 3px rgba(77,77,77,.25);
+				-webkit-transition: all .5s ease-in-out;
+				color:#222;
+
 
 			}
 
+			.task:after {
+				content:"";
+    			display:table;
+				clear:both;
+
+			}
 			
 
+			.task.complete {
+				
+				opacity:.25;
+
+			}
+
+			.task.complete.selected {
+				
+				opacity:.75;
+
+			}
 
 			.task.complete > header {
 				
@@ -142,7 +198,9 @@ body {
 
 			.selected {
 				
+				box-shadow:0 0 0 1px #999, 0px 1px 3px rgba(77,77,77,.25);
 				background:#efc;
+				color:#222;
 
 			}
 
@@ -174,7 +232,7 @@ body {
 			}
 
 			.task > header { margin:5px; float:left;}
-			.task  h2 {color:#222;}
+			.task  h2 {}
 			.task > section {
 				
 				float:left;
@@ -186,7 +244,8 @@ body {
 					position:absolute;
 					right:10px;
 					top:0px;
-				margin:0px;
+					margin:0px;
+
 			
 			}
 
@@ -194,6 +253,7 @@ body {
 			.task:hover > .meta li{
 				
 				display:block;
+				-webkit-transition: all .5s ease-in-out;
 
 			}
 
@@ -201,7 +261,9 @@ body {
 				
 				display:block;
 				color:#fff;
-
+				float:right;
+				opacity:1;
+				margin-top:9px;
 
 			}
 
@@ -214,7 +276,7 @@ body {
 
 			.actions li,
 			.meta li {
-				display:none;
+				
 				float:left;
 				margin-left:3px;
 
@@ -223,6 +285,21 @@ body {
 			.meta  {
 				
 				font-size:45%;
+
+			}
+
+			.meta li {
+				
+				-webkit-transition: all .25s ease-in-out;
+				opacity:0;
+
+			}
+
+			.task:hover .meta li { opacity:1;}
+
+			.selected .meta li {
+				
+				opacity:.3;
 
 			}
 
@@ -246,8 +323,8 @@ body {
 				border:1px dashed #eee;
 				position:relative;
 				clear:both;
-				overflow:hidden;
-				background:#ddd;
+				background:transparent;
+				box-shadow:none;
 			}
 
 			.new-task.selected

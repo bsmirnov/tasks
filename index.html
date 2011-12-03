@@ -17,6 +17,7 @@
 		    };
 		    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		}
+		var commandMode=false;
 		var today=new Date();
 		var tasks = {
 			settings: {
@@ -31,6 +32,12 @@
 			year:2011,
 			//Posible Actions
 			actions:["Created","Time Logged","Done","Deleted","Updated"],
+
+			trackCommand:function(){
+				$("body").toggleClass("command-mode");
+
+			},
+
 			metas:[
 					{
 						
@@ -61,7 +68,8 @@
 
 
 			init: function(){
-				
+
+				tasks.loadLocal();
 				//$(".task").on("click",);
 				$(document).on("click", ".task", function(event){$(".task").removeClass("selected");$(this).addClass("selected")});
 				$("#add-task-form").on("submit",function(e){
@@ -71,6 +79,15 @@
 					tasks.addTask(tasks.parseTask(txt).task);
 
 					$("#add-task-input").val("");
+				});
+
+				$("#enter-time-form").on("submit",function(e){
+					e.preventDefault();
+					//var txt = $("#add-task-input").val().trim()
+					//console.log(tasks.parseTask(txt).task);
+					//tasks.addTask(tasks.parseTask(txt).task);
+
+					$//("#add-task-input").val("");
 				});
 
 				if(tasks.settings.subtasks)
@@ -92,6 +109,21 @@
 				}
 			},
 
+			saveLocal: function(){
+				
+				localStorage.setItem('tasks', $('#tasks').html())
+			},
+			loadLocal: function() {
+				
+
+				if(localStorage.getItem("tasks"))
+				{
+					
+					$("#tasks").html(localStorage.getItem("tasks"));
+
+				}
+
+			},
 			loadTasks: function(){
 				//Load tasks start with fixture
 			},
@@ -124,6 +156,7 @@
 				$(history).append(log_header).append(log).appendTo(t);
 				
 				$('#tasks').prepend(t);
+
 
 			},
 
@@ -210,6 +243,7 @@
 
 		<script type="text/javascript" charset="utf-8">
 
+			
 			document.onkeyup = KeyCheck;       
  			
 			
@@ -219,7 +253,7 @@
 			tasks.init();
 
 			
-			$(".task:first").click();
+			
 
 			$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
 
@@ -234,8 +268,31 @@
 
 		});
 
+		function setCursor(node,pos){
+
+	    var node = (typeof node == "string" || node instanceof String) ? document.getElementById(node) : node;
+
+		    if(!node){
+		        return false;
+		    }else if(node.createTextRange){
+		        var textRange = node.createTextRange();
+		        textRange.collapse(true);
+		        textRange.moveEnd(pos);
+		        textRange.moveStart(pos);
+		        textRange.select();
+		        return true;
+		    }else if(node.setSelectionRange){
+		        node.setSelectionRange(pos,pos);
+		        return true;
+		    }
+
+		    return false;
+		}
+
 		function KeyCheck(e)
 			{
+			   
+			   tasks.saveLocal();
 			   
 
 			   var KeyID = (window.event) ? event.keyCode : e.keyCode;
@@ -252,6 +309,7 @@
 			   {
 	 				case 192: // Tilde
 	 				$(".add-task").slideToggle("fast");
+	 				$("#add-task-input").val("@"+$("#contexts .active").text().replace(" ","_"));
 	 				$("#add-task-input").focus();
 	 				break;
 	 				case 220: // Back Slash
@@ -260,9 +318,13 @@
 	 				$("#time_edit").focus();
 	 				break;
 	 				case 40: //Down
-	 			
+	 				if($(".selected").length)
+	 				{
 	 				$(".selected").next().click();
-
+	 				}
+	 				else {
+	 					$(".task:first").addClass("selected");
+	 				}
 	 				break;
 	 				case 38: //Up
 	 				$(".selected").prev(".task").click();
@@ -275,6 +337,7 @@
 	 				else 
 	 				{
 	 				$(".selected").toggleClass("complete");
+
 	 				$(".selected").find("log-time a").focus();
 	 				//$("#enter-time").slideDown();
 					//$("#add-time").val($(".selected>header").text().trim()).focus();
@@ -297,18 +360,34 @@
 		 				$("#time_edit").focus();
 	 				}
 	 				break;
+	 				//Esc
+	 				case 27:
+	 				$(".selected").removeClass("selected");
+	 				break
+
+	 				// :
+	 				case 186:
+	 				commandMode = true;
+	 				tasks.trackCommand();
+	 				break
 
 			   }
 			}
 			else
 			{
-				
+				//Esc
 				if(KeyID==27)
 				{
+					
+					if($("input").is(":focus"))
+					{
 					$("input").blur();
 					$(".add-task:visible, #enter-time:visible").hide();
-
-
+					}
+					else
+					{
+						$(".selected").removeClass("selected");
+					}
 				}
 
 			}
@@ -367,6 +446,9 @@
 		</hgroup>
 		
 	</header><!-- /header -->
+	<section id="command">
+		
+	</section><!-- / -->
 		<section class="add-task">
 		<header>
 			<h2>Add task</h2>
@@ -388,11 +470,12 @@
 			<header>
 				<h2>Log Time</h2>
 			</header><!-- /header -->
-			<form action="#" method="get" accept-charset="utf-8">
+			<form action="#" method="get" id="enter-time-form" accept-charset="utf-8">
 				
 				<input type="text" list="tasksDataList" id="add-time" name="add-time" value="" placeholder="Enter Time entry" accesskey="n">
 				<input type="text" name="time[edit]" id="time_edit" list="timeValues" value="" placeholder="">
 				<label for="add-time">Enter the length of time and quick description e.g. ".5h Coding" or "2h Documentation" </label> 
+				<label><input type="checkbox" name="completed" value="1"> Completed</label>
 				<button type="submit">Save</button>
 				<datalist id="timeValues">
 					<option value=".25" label=".25"></option>
