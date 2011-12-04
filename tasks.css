@@ -471,6 +471,7 @@ body.command-mode {
 				clear:both;
 				background:transparent;
 				box-shadow:none;
+				background:whiteSmoke;
 			}
 
 			.new-task.selected
@@ -492,6 +493,15 @@ body.command-mode {
 				
 			}
 
+			.new-task.selected h2:after {
+				
+				content:"Press Enter to add new task";
+				margin-left:20px;
+				font-weight:normal;
+				float:right;
+
+			}
+
 			.new-task > header {
 				
 				font-style: italic;
@@ -502,7 +512,9 @@ body.command-mode {
 
 			#tasks {}
 
-			#contexts {
+			#contexts,
+			#projects
+			 {
 				
 				margin:5px;
 				border:1px solid #ccc;
@@ -510,12 +522,16 @@ body.command-mode {
 
 			}
 
-			#contexts li {
+			#contexts li,
+			#projects li
+			 {
 				list-style-type:none;
 
 			}
 
-			.context {
+			.context,
+			.project
+			 {
 			
 				background:#fff;
 				margin:0;
@@ -525,7 +541,9 @@ body.command-mode {
 
 			}
 
-			.context a{
+			.context a,
+			.project a
+			{
 				
 				padding:5px;
 				margin:1px;
@@ -538,15 +556,23 @@ body.command-mode {
 
 			}
 
-			.context.active {
+			.context.active,
+			.project.active
+			 {
 				
 				border-left:10px solid #ED4444;
 
 			}
 
-			.context a:before {
+			.context a:before{
 				
 				content: "@";
+				color:#999;
+
+			}
+			.project a:before {
+				
+				content: "#";
 				color:#999;
 
 			}
@@ -575,7 +601,8 @@ margin-right: 0px;
 min-width: 420px;
 }
 
-.theme-gr #contexts {
+.theme-gr #contexts,
+.theme-gr #projects {
 margin: 10px;
 border: 1px solid #CCC;
 border-radius:5px;
@@ -596,7 +623,9 @@ box-shadow:
 				 0 20px 20px rgba(0, 0, 0, .15);
 }
 
-#contexts h2 {
+#contexts h2,
+#projects h2,
+ {
 	text-align: right;	
 	text-transform:uppercase;
 	font-size:100%;

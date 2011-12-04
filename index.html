@@ -127,6 +127,10 @@
 				}
 			},
 
+			insertAtIndex: function(n){
+				
+			},
+
 			saveLocal: function(){
 				
 				localStorage.setItem('tasks', $('#tasks').html())
@@ -353,15 +357,18 @@
 	 				break;
 
 	 				case 32: //Space
-	 				if($(".selected").is("complete")){
-	 					$(".selected").removeClass("complete");//.prependTo("#tasks");
+	 				if($(".selected").is(".complete")){
+
+	 					$(".selected").removeClass("complete").prependTo("#tasks");//.prependTo("#tasks");
+
 	 				}
 	 				else 
 	 				{
-	 				$(".selected").toggleClass("complete");//.appendTo("#tasks");
-
-
-	 				$(".selected").find("log-time a").focus();
+	 					if(!$(".selected").is(".new-task") ) {
+	 				$(".selected").addClass("complete").appendTo("#tasks").removeClass("selected");
+	 				$(".task:first").addClass("selected");
+	 					}
+	 				//$(".selected").find("log-time a").focus();
 	 				//$("#enter-time").slideDown();
 					//$("#add-time").val($(".selected>header").text().trim()).focus();
 					}
@@ -741,6 +748,21 @@
 				<li class="context"><a href="#" title="">Misc</a></li> -->
 			</ul><!-- / -->
 		</section><!-- / -->
+		<section id="projects" class="">
+			<header>
+				<h2>Projects</h2>
+			</header><!-- /header -->
+			<ul id="" class="list">
+				<li class="project"><a href="#" title="">Tasks App</a></li>
+				<li class="project"><a href="#" title="">Learn Quantum Physics</a></li>
+				<li class="project"><a href="#" title="">Build Tree House</a></li>
+				<li class="project"><a href="#" title="">World Peace</a></li>
+				
+				<!-- <li class="project"><a href="#" title="">My Work</a></li>
+				
+				<li class="project"><a href="#" title="">Misc</a></li>
+			</ul><!-- / -->
+		</section>
 		</article><!-- / -->
 	</body>
 </html>
