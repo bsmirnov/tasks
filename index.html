@@ -74,9 +74,12 @@
 				$(document).on("click", ".task", function(event){$(".task").removeClass("selected");$(this).addClass("selected")});
 				$("#add-task-form").on("submit",function(e){
 					e.preventDefault();
-					var txt = $("#add-task-input").val().trim()
+					var txt = $("#add-task-input").val().trim();
+
 					console.log(tasks.parseTask(txt).task);
+					if(tasks.parseTask(txt).task.trim()!=""){
 					tasks.addTask(tasks.parseTask(txt).task);
+					}
 
 					$("#add-task-input").val("");
 				});
@@ -87,7 +90,12 @@
 					//console.log(tasks.parseTask(txt).task);
 					//tasks.addTask(tasks.parseTask(txt).task);
 
-					$//("#add-task-input").val("");
+					//$("#enter-time-input").val("");
+					
+					//$("#enter-time").hide();
+					//$("input").blur();
+					
+
 				});
 
 				if(tasks.settings.subtasks)
@@ -106,6 +114,16 @@
 
 				for (var item in tasks.actions) {
 				  //console.log(tasks.actions[item]);
+				}
+			},
+
+			switchContext:function(){
+				if($(".context.active").length){
+				$(".context.active").removeClass("active").next().addClass("active");
+				}
+				else
+				{
+					$(".context:first").addClass("active");
 				}
 			},
 
@@ -130,7 +148,7 @@
 
 			loadContexts: function(){
 				//Load Extra Contexts
-				tasks.contexts = ["Work 2","Home 3","Someda 3","Learning 3"];
+				tasks.contexts = ["My Work",  "Admin", "Innovation", "Learning", "Misc","Some Day"];
 				$.each(tasks.contexts, function(index,value){
 					$("#contexts .list").append("<li class='context'><a href='#"+value+"'>"+value+"</li>");
 				});
@@ -187,7 +205,7 @@
 				// console.log(task);
 
 				//Parse for Day
-				var re = new RegExp(/Today|Tommorow|Monday|Tuesday|Wednesday|Thursday|Friday|Next\sWeek/i);
+				var re = new RegExp(/(Today|Tommorow|Monday|Tuesday|Wednesday|Thursday|Friday|Next\sWeek)\s/i);
 				var w = task.match(re);
 				task = task.replace(re,"").trim();
 
@@ -309,7 +327,11 @@
 			   {
 	 				case 192: // Tilde
 	 				$(".add-task").slideToggle("fast");
+
+	 				//If there is a context that is selected add it to task entry
+	 				if($("#contexts .active").length){
 	 				$("#add-task-input").val("@"+$("#contexts .active").text().replace(" ","_"));
+	 				}
 	 				$("#add-task-input").focus();
 	 				break;
 	 				case 220: // Back Slash
@@ -332,16 +354,20 @@
 
 	 				case 32: //Space
 	 				if($(".selected").is("complete")){
-	 					$(".selected").removeClass("complete");
+	 					$(".selected").removeClass("complete");//.prependTo("#tasks");
 	 				}
 	 				else 
 	 				{
-	 				$(".selected").toggleClass("complete");
+	 				$(".selected").toggleClass("complete");//.appendTo("#tasks");
+
 
 	 				$(".selected").find("log-time a").focus();
 	 				//$("#enter-time").slideDown();
 					//$("#add-time").val($(".selected>header").text().trim()).focus();
 					}
+	 				break;
+	 				case 9: //tab
+	 				tasks.switchContext();
 	 				break;
 	 				case 13: // enter
 	 				if($(".selected").is(".new-task"))
@@ -436,26 +462,34 @@
 
 	</head>
 	<body class="theme-gr">
-	<article id="container">
+	
 		
 	
 	<header>
 		<hgroup>
-				<h1>My Stuff</h1>
-				<h2>Tasks at glance</h2>
+				<h1 id="logo">Tasks</h1>
+				<h2 id="section">At glance</h2>
 		</hgroup>
+		<section class="help">
+			<ul>
+				<li><span class="key">`</span>new task</li>
+				<li><span class="key">\</span>time entry</li></li>
+				<li><span class="key">:</span>enter command mode</li></li>
+			</ul><!-- / -->
+		</section><!-- / -->
 		
 	</header><!-- /header -->
+	<article id="container">
 	<section id="command">
 		
 	</section><!-- / -->
-		<section class="add-task">
+		<section class="add-task form">
 		<header>
 			<h2>Add task</h2>
 			
 		</header><!-- /header -->
 		<form action="#" method="get" id="add-task-form" accept-charset="utf-8">
-			<input type="text" id="add-task-input" name="add-task" value="" placeholder="Type Task name" accesskey="n"> 
+			<input type="text" id="add-task-input" name="add-task" value="" placeholder="@Context on:DD MMM !num" accesskey="n"> 
 			<label for="add-task">Enter the task you can add context by using @CONTEXT</label>
 		
 			<section class="extra">
@@ -466,7 +500,7 @@
 		</form>
 			
 		</section><!-- / -->
-		<section id="enter-time">
+		<section id="enter-time" class="form">
 			<header>
 				<h2>Log Time</h2>
 			</header><!-- /header -->
@@ -688,16 +722,12 @@
 		</section><!-- / -->
 		<section id="contexts" class="">
 			<header>
-				<h2>My Contexts</h2>
+				<h2>Contexts</h2>
 			</header><!-- /header -->
 			<ul id="" class="list">
-				<li class="context"><a href="#" title="">My Work</a></li>
-				<li class="context"><a href="#" title="">SOW Work</a></li>
-				<li class="context"><a href="#" title="">PMED Objectives</a></li>
-				<li class="context"><a href="#" title="">Innovation</a></li>
-				<li class="context"><a href="#" title="">Training</a></li>
-				<li class="context"><a href="#" title="">Admin</a></li>
-				<li class="context"><a href="#" title="">Misc</a></li>
+				<!-- <li class="context"><a href="#" title="">My Work</a></li>
+				
+				<li class="context"><a href="#" title="">Misc</a></li> -->
 			</ul><!-- / -->
 		</section><!-- / -->
 		</article><!-- / -->

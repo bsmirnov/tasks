@@ -7,13 +7,15 @@
 	status:"active",
 
 	log:[{
-		date:"",
-		action:"",
+		date:"Oct 11",
+		action:"Created",
 		text:"",
 		time:""
 	}]
 
 }]}
+
+
 
 
 //task.log.add
