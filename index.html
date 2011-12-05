@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="animate.css">
 		<link rel="stylesheet" href="tasks.css">
-		<link rel="stylesheet" href="depth.css">
+		<link rel="stylesheet" href="depth.css" media="none">
 		
 
 		<script src="jquery-1.7.min.js"></script>   
@@ -71,6 +71,7 @@
 			init: function(){
 
 				tasks.loadLocal();
+				$("link[href='depth.css']").attr("media","screen");
 				//$(".task").on("click",);
 				$(document).on("click", ".task", function(event){
 					$(".task").removeClass("selected");$(this).addClass("selected");
