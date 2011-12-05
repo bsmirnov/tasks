@@ -71,14 +71,20 @@
 
 				tasks.loadLocal();
 				//$(".task").on("click",);
-				$(document).on("click", ".task", function(event){$(".task").removeClass("selected");$(this).addClass("selected")});
+				$(document).on("click", ".task", function(event){
+					$(".task").removeClass("selected");$(this).addClass("selected");
+					tasks.display($(".history",this));
+					
+				});
+				$(document).on("click", ".tick", function(event){$(this).closest(".task").toggleClass("complete");});
+
 				$("#add-task-form").on("submit",function(e){
 					e.preventDefault();
 					var txt = $("#add-task-input").val().trim();
 
-					console.log(tasks.parseTask(txt).task);
+					//console.log(tasks.parseTask(txt).task);
 					if(tasks.parseTask(txt).task.trim()!=""){
-					tasks.addTask(tasks.parseTask(txt).task);
+					tasks.addTask(tasks.parseTask(txt).task,tasks.parseTask(txt).meta);
 					}
 
 					$("#add-task-input").val("");
@@ -158,12 +164,25 @@
 				});
 			},
 
-			addTask: function(name){
+			addTask: function(name, meta){
 				var guid = guidGenerator();
 				var t = $("<article id='"+ guid +"' class='task active'></article>");
 
-				$("<h2>"+name+"</h2>").appendTo(t).wrap("<header></header>");
+				t.data(meta);
 
+				
+				
+				if(meta.context){
+				 var contexts=$('<ul class="task-contexts"></ul>');
+				 $.each(meta.context,function(index,value){
+					var v = value.replace("@","");
+					$(contexts).append("<li  class='task-context'><a href='#"+v+"'>"+v+"</a></li>");
+
+				})
+				}
+				var header= $("<header></header>");
+				$(header).append("<div class='tick'></div><h2>"+name+"</h2>").append(contexts).appendTo(t);
+				//$("<div class='tick'></div><h2>"+name+"</h2>").appendTo(t).wrap();
 
 				var history=$('<section class="history"></section>');
 
@@ -174,7 +193,16 @@
 					<span class="date">'+tasks.months[today.getMonth()]+" "+today.getDate()+", "+today.getFullYear()+'</span>\
 					<span class="action">Created</span> \
 								</li>').wrap("<ul></ul>");
+			  
+			    if (meta.due){
+				var meta_section = $("<section class='meta'></section>");
+				var meta_ul = $("<ul></ul>");
+				var due_li = $('<li class="due-date"><a href="#" title="">'+meta.due+'</a></li>');
 
+				$(due_li).appendTo(meta_ul);
+				$(meta_ul).appendTo(meta_section);
+				$(t).append(meta_section).addClass("due-date");
+				}
 				$(history).append(log_header).append(log).appendTo(t);
 				
 				$('#tasks').prepend(t);
@@ -192,13 +220,13 @@
 				// console.log(s);
 				// console.log(task);
 				
-				//Parse for context
-				var re = new RegExp(/@\w+/i);
+				//Parse for contexts
+				var re = new RegExp(/@(\w+)/ig);
 				var c = task.match(re);
 				task = task.replace(re,"").trim();
 
-				// console.log(c);
-				// console.log(task);
+				//console.log(c.join(",").replace(/@/g,""));
+				//console.log(task);
 
 				//Parse for priority
 				var re = new RegExp(/(!)(\w+)/i);
@@ -226,34 +254,42 @@
 				date = new Date(day[2]+" "+day[4]+" "+today.getFullYear());
 				
 				var one_day=1000*60*60*24; //Seconds
-
+				var due=day[2]+" "+day[4];
 				days_until= Math.ceil((date.getTime()-today.getTime())/(one_day));
+				console.log("===");
+				console.log(day);
+				console.log(day[2]+" "+day[4]);
+				console.log(null ? date.getFullYear() : "");
+				console.log("For " + tasks.weekdays[date.getDay()]);
+				console.log("Days Until " + days_until);
+				console.log(task);
+								console.log("===");
 
-				// console.log(day);
-				//console.log(null ? date.getFullYear() : "");
-				// console.log("For " + tasks.weekdays[date.getDay()]);
-				// console.log("Days Until " + days_until);
-				// console.log(task);
 				}
 
 
-
+				console.log(c);
 				return  {
 					"task":task,
 					"meta":{
-					"context":null ? c[0].replace("@","") : "Misc",
+					"context":null ? ["misc"] : c,
 					"importance":null ?i[2].replace("!","") : 0,
 					"weekday":w,
 					"due_in":null ? days_until : null,
-					"raw_date":null ? date : null
+					"raw_date":null ? date : null,
+					"due":due
+
 						}
 					}
 				
 			},
 
 			
-
+			display:function(elem){
+				$("#display").empty().append($(elem).clone());
+			},
 			logTime: function(){}
+
 
 
 			
@@ -359,14 +395,14 @@
 	 				case 32: //Space
 	 				if($(".selected").is(".complete")){
 
-	 					$(".selected").removeClass("complete").prependTo("#tasks");//.prependTo("#tasks");
+	 					$(".selected").removeClass("complete");//.prependTo("#tasks");//.prependTo("#tasks");
 
 	 				}
 	 				else 
 	 				{
 	 					if(!$(".selected").is(".new-task") ) {
-	 				$(".selected").addClass("complete").appendTo("#tasks").removeClass("selected");
-	 				$(".task:first").addClass("selected");
+	 				$(".selected").addClass("complete");//.appendTo("#tasks").removeClass("selected");
+	 				//$(".task:first").addClass("selected");
 	 					}
 	 				//$(".selected").find("log-time a").focus();
 	 				//$("#enter-time").slideDown();
@@ -552,7 +588,7 @@
 		<section id="tasks" class="">
 			<article id="" class="task active repeats due-date normal">
 				<header >
-					<h2>Create Documentation </h2>
+				<div class="tick"></div><h2>Create Documentation </h2>
 				</header>
 					<section class="description">
 						
@@ -598,7 +634,7 @@
 
 			<article id="" class="task">
 				<header >
-					<h2>Code the Mockup</h2>
+				<div class="tick"></div><h2>Code the Mockup</h2>
 				</header>
 					<section class="description">
 						
@@ -644,7 +680,7 @@
 
 			<article id="" class="task active due-date">
 				<header >
-					<h2>Do some thing </h2>
+				<div class="tick"></div><h2>Do some thing </h2>
 				</header>
 					<section class="description">
 						
@@ -687,7 +723,7 @@
 					</section><!-- / -->	
 					<article id="" class="task active due-date">
 				<header >
-					<h2>Do some thing </h2>
+				<div class="tick"></div><h2>Do some thing </h2>
 				</header>
 					<section class="description">
 						
@@ -737,7 +773,9 @@
 			</header><!-- /header -->		
 				
 			</article><!-- / -->
+			
 		</section><!-- / -->
+		
 		<section id="contexts" class="">
 			<header>
 				<h2>Contexts</h2>
@@ -762,6 +800,9 @@
 				
 				<li class="project"><a href="#" title="">Misc</a></li>
 			</ul><!-- / -->
+		</section>
+		<section id="display">
+
 		</section>
 		</article><!-- / -->
 	</body>

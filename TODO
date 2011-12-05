@@ -1,0 +1,24 @@
+TODO
+
+These are general ideas some are more important then others, some will probably be dropped
+
+- Move Styles into theme and re-organize css
+- Combine CSS css rules that fit together
+- Switch to LESS or SASS
+- Move task parsing into module
+- Modulirize so you can turn projects/contexts on off or turn off time tracking. 
+- Add multiline input
+- Create import module 
+- Create export module
+- Create Project View
+- Create Context View
+- Create Date Views (Week, Month)
+- Logging adn Task History
+- Backend Implementation for storage of tasks
+- Task relationships ?
+- Time Estimates
+- Task Breakdown Module
+
+
+
+

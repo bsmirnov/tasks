@@ -261,6 +261,22 @@ body.command-mode {
 
 			}
 
+			.tick {
+				width: 13px;
+				height: 13px;
+				background: url(img/sprite.png) -3px -21px no-repeat;
+				position: absolute;
+				left: 8px;
+				top: 9px;
+				-webkit-transition: all .5s ease-in-out;
+				}
+			
+			.complete .tick {
+				
+				background: url(img/sprite.png) -3px -37px no-repeat;
+
+			}
+
 			.help {padding:5px;margin-bottom:5px;float:right;}
 			.help .key { padding:3px 5px; border:1px solid #ccc; display:inline-block; margin-right:5px; border-radius:5px;
 				/*box-shadow: 0 0 0 1px #666,0 1px 1px 1px #999, 0 3px 0 2px #ccc;*/
@@ -292,7 +308,7 @@ body.command-mode {
 				
 				opacity:.25;
 				box-shadow:none;
-				background:#fff url(tick.png) 8px center no-repeat;
+				/*background:#fff url(tick.png) 8px center no-repeat;*/
 				background-size:18px;
 
 			}
@@ -303,7 +319,7 @@ body.command-mode {
 
 			}
 
-			.task.complete > header {
+			.task.complete h2 {
 				
 				text-decoration: line-through;
 
@@ -319,7 +335,7 @@ body.command-mode {
 				display:none;
 				background:#fff;	
 			}
-			.selected > .history { 
+			/*.selected > .history { 
 
 				display:block; 
 		
@@ -329,7 +345,7 @@ body.command-mode {
 			
 
 			}
-
+*/
 			.selected {
 				
 				box-shadow:0 0 0 1px #999, 0px 1px 3px rgba(77,77,77,.25);
@@ -359,7 +375,7 @@ body.command-mode {
 				clear:left;
 				color:#999;
 				font-size:75%;
-				position:fixed;
+				
 				bottom:0;
 				width:100%;
 			}
@@ -378,7 +394,7 @@ body.command-mode {
 			}
 
 			.task > header { margin:5px; float:left;}
-			.task  h2 {}
+			.task  h2 { display:inline-block;}
 			.task > section {
 				
 				float:left;
@@ -577,6 +593,14 @@ body.command-mode {
 
 			}
 
+/*Task Contexts*/
+.task-contexts {display:inline-block;}
+.task-context {
+list-style-type:none;
+display:inline-block;
+padding:2px 3px;
+margin-left:2px; font-size:70%}
+.task-context a{color: #295;}
 /*Subtasks*/
 .task > .task { display:none;}
 .with-subtasks .task > .task {
@@ -635,3 +659,26 @@ box-shadow:
 	
 
 }
+
+#display {
+border-radius:5px;
+margin:10px;
+padding: 5px 0 20px;
+float: left;
+width: 60.8%;
+margin-right: 0px;
+min-width: 420px;
+opacity:.5;
+-webkit-transition: all .25s ease-in-out;
+box-shadow:
+				0 1px 0 #CCC,
+				 0 2px 0 #C9C9C9,
+				 0 3px 0 #BBB,
+				 
+				 0 4px 1px rgba(0, 0, 0, .1),
+				 0 0 5px rgba(0, 0, 0, .1),
+				 0 1px 3px rgba(0, 0, 0, .3),
+				 0 3px 5px rgba(0, 0, 0, .2),
+				 0 5px 10px rgba(0, 0, 0, .25),
+				 0 10px 10px rgba(0, 0, 0, .2),
+				 0 20px 20px rgba(0, 0, 0, .15);
