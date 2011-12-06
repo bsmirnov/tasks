@@ -1,0 +1,15 @@
+This is a somewhat of a playground project. 
+Inspired by a couple of projects I am trying to analyze a certain problem and a work flow and solve few of my problems. This is a rough draft and a work in progress. 
+Feedbac welcome. 
+
+So far it is pretty much static page that you can interact with using keyboard. 
+
+you can move up and down in the task list with up and down arrow
+you can hit enter to log time on the current item's entry
+you can hit space to mark it as completed
+tilde will popout new task dialog
+back slash will pop out the time entry widget
+
+Todo:
+Subtasks
+Update Tasks

@@ -1,1 +1,811 @@
-My GitHub Page
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My Stuff</title>
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="animate.css">
+		<link rel="stylesheet" href="tasks.css">
+		<link rel="stylesheet" href="depth.css" media="none">
+		
+
+		<script src="jquery-1.7.min.js"></script>   
+
+		<script type="text/javascript" charset="utf-8">
+		function guidGenerator() {
+		    var S4 = function() {
+		       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+		    };
+		    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+		}
+		var commandMode=false;
+		var today=new Date();
+		var tasks = {
+			settings: {
+				subtasks:false,
+				session:guidGenerator(),
+			},
+			themes: [],
+			contexts: [],
+			priority:["someday","low","medium","high"],
+			months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+			weekdays:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+			year:2011,
+			//Posible Actions
+			actions:["Created","Time Logged","Done","Deleted","Updated"],
+
+			trackCommand:function(){
+				$("body").toggleClass("command-mode");
+
+			},
+
+			metas:[
+					{
+						
+						name:"Complete",
+						type:"action"
+						//callback:tasks.complete(task)
+					},
+					{
+						
+						name:"Log Time",
+						type:"action"
+						//callback:tasks.logTime()
+					},
+					{
+						name:"Context",
+						type:"action"
+						//callback:switchContext()
+
+					},
+					{
+						name:"Due Date",
+						type:"display"
+					}
+
+
+				],
+
+
+
+			init: function(){
+
+				tasks.loadLocal();
+				$("link[href='depth.css']").attr("media","screen");
+				//$(".task").on("click",);
+				$(document).on("click", ".task", function(event){
+					$(".task").removeClass("selected");$(this).addClass("selected");
+					tasks.display($(".history",this));
+					
+				});
+				$(document).on("click", ".tick", function(event){$(this).closest(".task").toggleClass("complete");});
+
+				$("#add-task-form").on("submit",function(e){
+					e.preventDefault();
+					var txt = $("#add-task-input").val().trim();
+
+					//console.log(tasks.parseTask(txt).task);
+					if(tasks.parseTask(txt).task.trim()!=""){
+					tasks.addTask(tasks.parseTask(txt).task,tasks.parseTask(txt).meta);
+					}
+
+					$("#add-task-input").val("");
+				});
+
+				$("#enter-time-form").on("submit",function(e){
+					e.preventDefault();
+					//var txt = $("#add-task-input").val().trim()
+					//console.log(tasks.parseTask(txt).task);
+					//tasks.addTask(tasks.parseTask(txt).task);
+
+					//$("#enter-time-input").val("");
+					
+					//$("#enter-time").hide();
+					//$("input").blur();
+					
+
+				});
+
+				if(tasks.settings.subtasks)
+					{
+						
+						$("body").addClass("with-subtasks");
+
+					}
+				
+				tasks.loadTasks();
+				tasks.loadContexts();
+
+				for (var item in tasks.metas) {
+				  //console.log(tasks.metas[item]["name"]);
+				}
+
+				for (var item in tasks.actions) {
+				  //console.log(tasks.actions[item]);
+				}
+			},
+
+			switchContext:function(){
+				if($(".context.active").length){
+				$(".context.active").removeClass("active").next().addClass("active");
+				}
+				else
+				{
+					$(".context:first").addClass("active");
+				}
+			},
+
+			insertAtIndex: function(n){
+				
+			},
+
+			saveLocal: function(){
+				
+				localStorage.setItem('tasks', $('#tasks').html())
+			},
+			loadLocal: function() {
+				
+
+				if(localStorage.getItem("tasks"))
+				{
+					
+					$("#tasks").html(localStorage.getItem("tasks"));
+
+				}
+
+			},
+			loadTasks: function(){
+				//Load tasks start with fixture
+			},
+
+			loadContexts: function(){
+				//Load Extra Contexts
+				tasks.contexts = ["My Work",  "Admin", "Innovation", "Learning", "Misc","Some Day"];
+				$.each(tasks.contexts, function(index,value){
+					$("#contexts .list").append("<li class='context'><a href='#"+value+"'>"+value+"</li>");
+				});
+			},
+
+			addTask: function(name, meta){
+				var guid = guidGenerator();
+				var t = $("<article id='"+ guid +"' class='task active'></article>");
+
+				t.data(meta);
+
+				
+				
+				if(meta.context){
+				 var contexts=$('<ul class="task-contexts"></ul>');
+				 $.each(meta.context,function(index,value){
+					var v = value.replace("@","");
+					$(contexts).append("<li  class='task-context'><a href='#"+v+"'>"+v+"</a></li>");
+
+				})
+				}
+				var header= $("<header></header>");
+				$(header).append("<div class='tick'></div><h2>"+name+"</h2>").append(contexts).appendTo(t);
+				//$("<div class='tick'></div><h2>"+name+"</h2>").appendTo(t).wrap();
+
+				var history=$('<section class="history"></section>');
+
+				var log_header=$('<header>\
+								<h3>Task History</h3>\
+								</header>');
+				var log=$('<li id="'+guid+'">\
+					<span class="date">'+tasks.months[today.getMonth()]+" "+today.getDate()+", "+today.getFullYear()+'</span>\
+					<span class="action">Created</span> \
+								</li>').wrap("<ul></ul>");
+			  
+			    if (meta.due){
+				var meta_section = $("<section class='meta'></section>");
+				var meta_ul = $("<ul></ul>");
+				var due_li = $('<li class="due-date"><a href="#" title="">'+meta.due+'</a></li>');
+
+				$(due_li).appendTo(meta_ul);
+				$(meta_ul).appendTo(meta_section);
+				$(t).append(meta_section).addClass("due-date");
+				}
+				$(history).append(log_header).append(log).appendTo(t);
+				
+				$('#tasks').prepend(t);
+
+
+			},
+
+			parseTask: function(task){
+
+				//Scheduled/Unscheduled
+				var re = new RegExp(/^\-/i);
+				var s = task.match(re) ? "U" : "S";
+				task = task.replace(re,"").trim();
+
+				// console.log(s);
+				// console.log(task);
+				
+				//Parse for contexts
+				var re = new RegExp(/@(\w+)/ig);
+				var c = task.match(re);
+				task = task.replace(re,"").trim();
+
+				//console.log(c.join(",").replace(/@/g,""));
+				//console.log(task);
+
+				//Parse for priority
+				var re = new RegExp(/(!)(\w+)/i);
+				var i = task.match(re);
+				task = task.replace(re,"").trim();
+
+				// console.log(i);
+				// console.log(task);
+
+				//Parse for Day
+				var re = new RegExp(/(Today|Tommorow|Monday|Tuesday|Wednesday|Thursday|Friday|Next\sWeek)\s/i);
+				var w = task.match(re);
+				task = task.replace(re,"").trim();
+
+				// console.log(w);
+				// console.log(task);
+
+				//Parse for due:
+				
+				var re = new RegExp(/(on:)(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec)(\s)(\d{1,2})/i);
+				var day = task.match(re);
+				task = task.replace(re,"").trim();
+				if(day)
+				{
+				date = new Date(day[2]+" "+day[4]+" "+today.getFullYear());
+				
+				var one_day=1000*60*60*24; //Seconds
+				var due=day[2]+" "+day[4];
+				days_until= Math.ceil((date.getTime()-today.getTime())/(one_day));
+				console.log("===");
+				console.log(day);
+				console.log(day[2]+" "+day[4]);
+				console.log(null ? date.getFullYear() : "");
+				console.log("For " + tasks.weekdays[date.getDay()]);
+				console.log("Days Until " + days_until);
+				console.log(task);
+								console.log("===");
+
+				}
+
+
+				console.log(c);
+				return  {
+					"task":task,
+					"meta":{
+					"context":null ? ["misc"] : c,
+					"importance":null ?i[2].replace("!","") : 0,
+					"weekday":w,
+					"due_in":null ? days_until : null,
+					"raw_date":null ? date : null,
+					"due":due
+
+						}
+					}
+				
+			},
+
+			
+			display:function(elem){
+				$("#display").empty().append($(elem).clone());
+			},
+			logTime: function(){}
+
+
+
+			
+			
+
+
+		}
+		</script>
+
+		<script type="text/javascript" charset="utf-8">
+
+			
+			document.onkeyup = KeyCheck;       
+ 			
+			
+
+		$(function() {
+			
+			tasks.init();
+
+			
+			
+
+			$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
+
+
+			$("#add-time").focus(function(){
+				
+				getTasks();
+
+			});
+
+
+
+		});
+
+		function setCursor(node,pos){
+
+	    var node = (typeof node == "string" || node instanceof String) ? document.getElementById(node) : node;
+
+		    if(!node){
+		        return false;
+		    }else if(node.createTextRange){
+		        var textRange = node.createTextRange();
+		        textRange.collapse(true);
+		        textRange.moveEnd(pos);
+		        textRange.moveStart(pos);
+		        textRange.select();
+		        return true;
+		    }else if(node.setSelectionRange){
+		        node.setSelectionRange(pos,pos);
+		        return true;
+		    }
+
+		    return false;
+		}
+
+		function KeyCheck(e)
+			{
+			   
+			   tasks.saveLocal();
+			   
+
+			   var KeyID = (window.event) ? event.keyCode : e.keyCode;
+
+			   if(!$("input").is(":focus")){
+
+			   var index = $(".task").index($(".task.selected"));
+	 			
+	 		   var len = $(".task").length;	
+
+	 		  
+
+			   switch(KeyID)
+			   {
+	 				case 192: // Tilde
+	 				$(".add-task").slideToggle("fast");
+
+	 				//If there is a context that is selected add it to task entry
+	 				if($("#contexts .active").length){
+	 				$("#add-task-input").val("@"+$("#contexts .active").text().replace(" ","_"));
+	 				}
+	 				$("#add-task-input").focus();
+	 				break;
+	 				case 220: // Back Slash
+	 				$("#enter-time").slideToggle("fast");
+	 				$("#add-time").val($(".selected header:first").text().trim());
+	 				$("#time_edit").focus();
+	 				break;
+	 				case 40: //Down
+	 				if($(".selected").length)
+	 				{
+	 				$(".selected").next().click();
+	 				}
+	 				else {
+	 					$(".task:first").addClass("selected");
+	 				}
+	 				break;
+	 				case 38: //Up
+	 				$(".selected").prev(".task").click();
+	 				break;
+
+	 				case 32: //Space
+	 				if($(".selected").is(".complete")){
+
+	 					$(".selected").removeClass("complete");//.prependTo("#tasks");//.prependTo("#tasks");
+
+	 				}
+	 				else 
+	 				{
+	 					if(!$(".selected").is(".new-task") ) {
+	 				$(".selected").addClass("complete");//.appendTo("#tasks").removeClass("selected");
+	 				//$(".task:first").addClass("selected");
+	 					}
+	 				//$(".selected").find("log-time a").focus();
+	 				//$("#enter-time").slideDown();
+					//$("#add-time").val($(".selected>header").text().trim()).focus();
+					}
+	 				break;
+	 				case 9: //tab
+	 				tasks.switchContext();
+	 				break;
+	 				case 13: // enter
+	 				if($(".selected").is(".new-task"))
+	 				{
+	 					$(".add-task").slideToggle("fast");
+	 					$("#add-task-input").focus();
+	 				
+	 				}
+	 				else
+	 				{
+	 					//$("#enter-time").slideToggle("fast");
+	 					//$("#add-time").focus();
+
+	 					$("#enter-time").slideToggle("fast");
+		 				$("#add-time").val($(".selected header:first").text().trim());
+		 				$("#time_edit").focus();
+	 				}
+	 				break;
+	 				//Esc
+	 				case 27:
+	 				$(".selected").removeClass("selected");
+	 				break
+
+	 				// :
+	 				case 186:
+	 				commandMode = true;
+	 				tasks.trackCommand();
+	 				break
+
+			   }
+			}
+			else
+			{
+				//Esc
+				if(KeyID==27)
+				{
+					
+					if($("input").is(":focus"))
+					{
+					$("input").blur();
+					$(".add-task:visible, #enter-time:visible").hide();
+					}
+					else
+					{
+						$(".selected").removeClass("selected");
+					}
+				}
+
+			}
+			
+		}
+
+		function NextTask()
+		{
+			if(!$(".task.selected").length)
+			{
+				
+			}
+		}
+
+		function getTasks()
+		{
+			$("#tasksDataList").remove();
+			var tasks = [];
+			var datalist = $("<datalist id='tasksDataList' name='tasks'></datalist>");
+			$(".task.active").each(function(){
+				var txt = $("header:first",this).text().trim();
+				var opt = $("<option></option>");
+				$(opt).attr("label",txt).val(txt);
+				$(datalist).append(opt)
+			});
+
+			$("#enter-time").append(datalist);
+
+			
+
+
+		}
+
+		function addTask()
+		{
+			
+
+		}
+
+		function logTime() 
+		{
+			
+		}
+
+		</script>
+
+	</head>
+	<body class="theme-gr">
+	
+		
+	
+	<header>
+		<hgroup>
+				<h1 id="logo">Tasks</h1>
+				<h2 id="section">At glance</h2>
+		</hgroup>
+
+		<nav>
+			<ul class="menu">
+				<li><a href="#" title="At Glance">At Glance</a></li>
+				<li><a href="#" title="At Glance">Week </a></li>
+				<li><a href="#" title="At Glance">Month</a></li>
+				<li><a href="#" title="At Glance">Context</a></li>
+				
+			</ul><!-- / -->
+		</nav>	
+
+		<section class="help">
+			<ul>
+				<li><span class="key">`</span>new task</li>
+				<li><span class="key">\</span>time entry</li></li>
+				<li><span class="key">:</span>enter command mode</li></li>
+			</ul><!-- / -->
+		</section><!-- / -->
+		
+	</header><!-- /header -->
+	<article id="container">
+	<section id="command">
+		
+	</section><!-- / -->
+		<section class="add-task form">
+		<header>
+			<h2>Add task</h2>
+			
+		</header><!-- /header -->
+		<form action="#" method="get" id="add-task-form" accept-charset="utf-8">
+			<input type="text" id="add-task-input" name="add-task" value="" placeholder="@Context on:DD MMM !num" accesskey="n"> 
+			<label for="add-task">Enter the task you can add context by using @CONTEXT</label>
+		
+			<section class="extra">
+				<label>Due Date<input type="date" name="" value=""></label> 
+				<label>Priority<input type="range" name="" value=""></label>
+			</section><!-- / -->
+			<button type="submit">Save</button>
+		</form>
+			
+		</section><!-- / -->
+		<section id="enter-time" class="form">
+			<header>
+				<h2>Log Time</h2>
+			</header><!-- /header -->
+			<form action="#" method="get" id="enter-time-form" accept-charset="utf-8">
+				
+				<input type="text" list="tasksDataList" id="add-time" name="add-time" value="" placeholder="Enter Time entry" accesskey="n">
+				<input type="text" name="time[edit]" id="time_edit" list="timeValues" value="" placeholder="">
+				<label for="add-time">Enter the length of time and quick description e.g. ".5h Coding" or "2h Documentation" </label> 
+				<label><input type="checkbox" name="completed" value="1"> Completed</label>
+				<button type="submit">Save</button>
+				<datalist id="timeValues">
+					<option value=".25" label=".25"></option>
+					<option value=".5" label=".5"></option>
+					<option value=".75" label=".75"></option>
+					<option value="1" label="1"></option>
+					<option value="1.5" label="1.5"></option>
+					<option value="2" label="2"></option>
+					<option value="2.5" label="2.5"></option>
+					<option value="3" label="3"></option>
+					<option value="4" label="4"></option>
+					<option value="5" label="5"></option>
+					<option value="6" label="6"></option>
+					<option value="7" label="7"></option>
+					<option value="8" label="8"></option>
+					<option value=".25" label=".25"></option>
+					<option value=".25" label=".25"></option>
+				</datalist>
+			</form>
+			
+		</section><!-- / -->
+		<section id="tasks" class="">
+			<article id="" class="task active repeats due-date normal">
+				<header >
+				<div class="tick"></div><h2>Create Documentation </h2>
+				</header>
+					<section class="description">
+						
+					</section><!-- / -->
+					
+					
+					<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+						
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+					<section class="history">
+					<header>
+						<h3>Task History</h3>
+					</header><!-- /header -->
+							<ul>
+								<li>
+								<span class="date">October 1st, 2011</span>
+								<span class="action">Created </span>
+								</li>
+								<li>
+								<span class="date">October 2st, 2011</span>
+								<span class="action">2 Hours Logged</span>
+								<span class="note">Working on particular aspect</span>
+								</li>
+								<li>
+								<span class="date">October 3st, 2011</span>
+								<span class="action">1 Hours Logged</span>
+								<span class="note">Documentation</span>
+								</li>
+							</ul><!-- / -->
+						
+					</section><!-- / -->	
+				
+			</article><!-- / -->
+
+			<article id="" class="task">
+				<header >
+				<div class="tick"></div><h2>Code the Mockup</h2>
+				</header>
+					<section class="description">
+						
+					</section><!-- / -->
+					
+					
+					<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+							<li class="repeats"><a href="#" title="">Monthly</a></li>
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+					<section class="history">
+					<header>
+						<h3>Task History</h3>
+					</header><!-- /header -->
+							<ul>
+								<li>
+								<span class="date">October 10st, 2011</span>
+								<span class="action">Created </span>
+								</li>
+								<li>
+								<span class="date">October 12st, 2011</span>
+								<span class="action">2 Hours Logged</span>
+								<span class="note">Working on particular aspect</span>
+								</li>
+								<li>
+								<span class="date">October 13st, 2011</span>
+								<span class="action">1 Hours Logged</span>
+								<span class="note">Documentation</span>
+								</li>
+							</ul><!-- / -->
+						
+					</section><!-- / -->	
+				
+			</article><!-- / -->
+
+			<article id="" class="task active due-date">
+				<header >
+				<div class="tick"></div><h2>Do some thing </h2>
+				</header>
+					<section class="description">
+						
+					</section><!-- / -->
+					
+					
+					<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+							<li class="repeats"><a href="#" title="">Weekly</a></li>
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+					<section class="history">
+					<header>
+						<h3>Task History</h3>
+					</header><!-- /header -->
+							<ul>
+								<li>
+								<span class="date">October 11st, 2011</span>
+								<span class="action">Created </span>
+								</li>
+								<li>
+								<span class="date">October 22st, 2011</span>
+								<span class="action">2 Hours Logged</span>
+								<span class="note">Working on particular aspect</span>
+								</li>
+								<li>
+								<span class="date">October 31st, 2011</span>
+								<span class="action">1 Hours Logged</span>
+								<span class="note">Documentation</span>
+								</li>
+							</ul><!-- / -->
+						
+					</section><!-- / -->	
+					<article id="" class="task active due-date">
+				<header >
+				<div class="tick"></div><h2>Do some thing </h2>
+				</header>
+					<section class="description">
+						
+					</section><!-- / -->
+					
+					
+					<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+							<li class="repeats"><a href="#" title="">Weekly</a></li>
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+					<section class="history">
+					<header>
+						<h3>Task History</h3>
+					</header><!-- /header -->
+							<ul>
+								<li>
+								<span class="date">October 11st, 2011</span>
+								<span class="action">Created </span>
+								</li>
+								<li>
+								<span class="date">October 22st, 2011</span>
+								<span class="action">2 Hours Logged</span>
+								<span class="note">Working on particular aspect</span>
+								</li>
+								<li>
+								<span class="date">October 31st, 2011</span>
+								<span class="action">1 Hours Logged</span>
+								<span class="note">Documentation</span>
+								</li>
+							</ul><!-- / -->
+						
+					</section><!-- / -->	
+				
+			</article><!-- / -->
+			</article><!-- / -->
+			<article id="" class="task new-task">
+			<header >
+				<h2>Add Task</h2>
+			</header><!-- /header -->		
+				
+			</article><!-- / -->
+			
+		</section><!-- / -->
+		
+		<section id="contexts" class="">
+			<header>
+				<h2>Contexts</h2>
+			</header><!-- /header -->
+			<ul id="" class="list">
+				<!-- <li class="context"><a href="#" title="">My Work</a></li>
+				
+				<li class="context"><a href="#" title="">Misc</a></li> -->
+			</ul><!-- / -->
+		</section><!-- / -->
+		<section id="projects" class="">
+			<header>
+				<h2>Projects</h2>
+			</header><!-- /header -->
+			<ul id="" class="list">
+				<li class="project"><a href="#" title="">Tasks App</a></li>
+				<li class="project"><a href="#" title="">Learn Quantum Physics</a></li>
+				<li class="project"><a href="#" title="">Build Tree House</a></li>
+				<li class="project"><a href="#" title="">World Peace</a></li>
+				
+				<!-- <li class="project"><a href="#" title="">My Work</a></li>
+				
+				<li class="project"><a href="#" title="">Misc</a></li>
+			</ul><!-- / -->
+		</section>
+		<section id="display">
+
+		</section>
+		</article><!-- / -->
+	</body>
+</html>
