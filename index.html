@@ -24,6 +24,8 @@
 			settings: {
 				subtasks:false,
 				session:guidGenerator(),
+				contenteditable:false,
+				debug:true
 			},
 			themes: [],
 			contexts: [],
@@ -33,7 +35,7 @@
 			year:2011,
 			//Posible Actions
 			actions:["Created","Time Logged","Done","Deleted","Updated"],
-
+			command: "",
 			trackCommand:function(){
 				$("body").toggleClass("command-mode");
 
@@ -78,6 +80,16 @@
 					tasks.display($(".history",this));
 					
 				});
+
+				$(document).on("click", ".tasklist", function(event){
+					event.preventDefault();
+
+					var id = $(this).attr("id");
+					console.log(id);
+					tasks.loadTasklist(id);
+					$("#tasks").attr("rel", id );					
+				});
+
 				$(document).on("click", ".tick", function(event){$(this).closest(".task").toggleClass("complete");});
 
 				$("#add-task-form").on("submit",function(e){
@@ -92,6 +104,20 @@
 					$("#add-task-input").val("");
 				});
 
+				$("#add-task-form").on("submit",function(e){
+					e.preventDefault();
+					var txt = $("#save-tasklist").val().trim();
+
+					//console.log(tasks.parseTask(txt).task);
+					if(tasks.parseTask(txt).task.trim()!=""){
+					tasks.addTask(tasks.parseTask(txt).task,tasks.parseTask(txt).meta);
+					}
+
+					$("#add-task-input").val("");
+				});
+
+
+
 				$("#enter-time-form").on("submit",function(e){
 					e.preventDefault();
 					//var txt = $("#add-task-input").val().trim()
@@ -102,6 +128,33 @@
 					
 					//$("#enter-time").hide();
 					//$("input").blur();
+					
+				
+
+				});
+
+				$("#save-tasklist-form").on("submit",function(e){
+					e.preventDefault();
+					var name = $("#tasklist-name-input").val().trim();
+					{
+						tasks.saveTasklist(name);
+					}
+					$("#add-task-input").val("").blur();
+					$("#save-tasklist").hide();
+				
+
+				});
+
+				$(document).on("click", ".clear-completed",function(){
+					
+					$(".task.complete").remove();
+					tasks.saveLocal();
+
+				});
+
+				$(document).on("click", ".save-tasklist",function(){
+					
+					$("#save-tasklist").show();
 					
 
 				});
@@ -125,6 +178,32 @@
 				}
 			},
 
+			loadTasklist:function(name){
+				if(localStorage.getItem(name))
+				{
+					
+					$("#tasks").html(localStorage.getItem(name));
+					console.log("Load Tasklist");
+				}
+
+				
+			},
+
+			saveTasklist:function(name){
+
+				console.log("Save Tasklist");
+				var id =  name.replace(" ","");
+
+				if(!localStorage.getItem(name)){
+
+				localStorage.setItem(id, $('#tasks').html());
+				$("#tasklists ul").append("<li class='tasklist' id='"+id+"'><a href='#"+id+"'>"+name+"</a></li>");
+				console.log(id);
+				}
+
+
+			},
+
 			switchContext:function(){
 				if($(".context.active").length){
 				$(".context.active").removeClass("active").next().addClass("active");
@@ -141,7 +220,9 @@
 
 			saveLocal: function(){
 				
-				localStorage.setItem('tasks', $('#tasks').html())
+				localStorage.setItem('tasks', $('#tasks').html());
+				localStorage.setItem('taskslists', $('#tasklists').html());
+				console.log("Tasks Saved");
 			},
 			loadLocal: function() {
 				
@@ -152,6 +233,13 @@
 					$("#tasks").html(localStorage.getItem("tasks"));
 
 				}
+				if(localStorage.getItem("taskslists"))
+				{
+					
+					$("#tasklists").html(localStorage.getItem("tasklists"));
+
+				}
+				console.log("Tasks Loaded");
 
 			},
 			loadTasks: function(){
@@ -209,10 +297,12 @@
 				
 				$('#tasks').prepend(t);
 
-
+				console.log("Task Added");
 			},
 
 			parseTask: function(task){
+
+				console.log("Parse Task");
 
 				//Scheduled/Unscheduled
 				var re = new RegExp(/^\-/i);
@@ -286,11 +376,40 @@
 				
 			},
 
+			deleteTask:function(task){
+				$(task).remove();
+				tasks.saveLocal();
+				console.log("Tasks Deleted");
+			},
+
 			
 			display:function(elem){
 				$("#display").empty().append($(elem).clone());
 			},
-			logTime: function(){}
+			logTime: function(){},
+			contentEditable: function(){
+				$("#tasks").addClass("editable");
+				$(".task:not(.complete)").attr("contenteditable",true);
+
+				console.log("Content Editable");
+
+			},
+			disableEditable: function(){
+				$("#tasks").removeClass("editable");
+				$(".task:not(.complete)").attr("contenteditable",false);
+				console.log("Content Editable OFF");
+
+			},
+			getLastKey: function()
+			{
+				return tasks.settings.command;
+			},
+			setLastKey: function(key)
+			{
+				tasks.settings.command = key;
+				console.log(key);
+			}
+
 
 
 
@@ -312,7 +431,7 @@
 			
 			tasks.init();
 
-			
+			$("#help").hide();
 			
 
 			$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
@@ -363,12 +482,15 @@
 	 			
 	 		   var len = $(".task").length;	
 
-	 		  
+	 		   
 
 			   switch(KeyID)
 			   {
+	 				
+	 				
+
 	 				case 192: // Tilde
-	 				$(".add-task").slideToggle("fast");
+	 				$(".add-task").slideDown("fast");
 
 	 				//If there is a context that is selected add it to task entry
 	 				if($("#contexts .active").length){
@@ -381,7 +503,13 @@
 	 				$("#add-time").val($(".selected header:first").text().trim());
 	 				$("#time_edit").focus();
 	 				break;
-	 				case 40: //Down
+
+	 				case 191:
+	 				$("#help").slideToggle("fast");
+	 				break;
+
+	 				case 40:
+	 				case 74: //Down
 	 				if($(".selected").length)
 	 				{
 	 				$(".selected").next().click();
@@ -390,11 +518,16 @@
 	 					$(".task:first").addClass("selected");
 	 				}
 	 				break;
-	 				case 38: //Up
+	 				case 38:
+	 				case 75: //Up
 	 				$(".selected").prev(".task").click();
 	 				break;
 
 	 				case 32: //Space
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					//break;
+	 				}
 	 				if($(".selected").is(".complete")){
 
 	 					$(".selected").removeClass("complete");//.prependTo("#tasks");//.prependTo("#tasks");
@@ -402,7 +535,7 @@
 	 				}
 	 				else 
 	 				{
-	 					if(!$(".selected").is(".new-task") ) {
+	 				if(!$(".selected").is(".new-task") ) {
 	 				$(".selected").addClass("complete");//.appendTo("#tasks").removeClass("selected");
 	 				//$(".task:first").addClass("selected");
 	 					}
@@ -415,6 +548,10 @@
 	 				tasks.switchContext();
 	 				break;
 	 				case 13: // enter
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					break;
+	 				}
 	 				if($(".selected").is(".new-task"))
 	 				{
 	 					$(".add-task").slideToggle("fast");
@@ -433,14 +570,30 @@
 	 				break;
 	 				//Esc
 	 				case 27:
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					tasks.disableEditable();
+	 					break;
+	 				}
 	 				$(".selected").removeClass("selected");
-	 				break
+	 				break;
 
 	 				// :
 	 				case 186:
 	 				commandMode = true;
 	 				tasks.trackCommand();
-	 				break
+	 				break;
+
+	 				case 68:
+	 				if(!$("#tasks").is(".editable") && !$(".selected").is(".new-task") && !$("input").is(":focus") && $(".task.selected").length)
+	 				{
+	 					
+	 					console.log(KeyID);
+	 					if(tasks.getLastKey() == KeyID)
+	 					{
+	 						tasks.deleteTask($(".task.selected"));
+	 					}
+	 				}
 
 			   }
 			}
@@ -459,9 +612,16 @@
 					{
 						$(".selected").removeClass("selected");
 					}
+
+					if($("#tasks").is(".editable"));
+	 				{
+	 					
+	 				}
 				}
 
 			}
+
+			tasks.setLastKey(KeyID);
 			
 		}
 
@@ -528,6 +688,7 @@
 
 		<section class="help">
 			<ul>
+				<li><span class="key">?</span>help</li>
 				<li><span class="key">`</span>new task</li>
 				<li><span class="key">\</span>time entry</li></li>
 				<li><span class="key">:</span>enter command mode</li></li>
@@ -536,9 +697,42 @@
 		
 	</header><!-- /header -->
 	<article id="container">
+	<section id="help">
+	<h2>Task Navigation</h2>
+		<ul>
+		<li>Use Up and Down Arrows to navigate tasks</li>
+		<li>Press Space to complete task</li>
+		<li>Press dd to delete a task</li>
+		<li>Press ` to open "Add Task" Dialog or move to the ADD TASK </li>
+		<li>Press Esc to cancel "Add Task" or "Log Time" </li>
+		<li>Press Enter on a task to open "Log Time"</li>
+		<li>Press Tab to Switch Context then open "New Task Dialog" to start with context</li>
+		</ul>
+	<h2>Task Syntax</h2>
+		<ul>
+		<li>use @context to add task with context</li>
+		<li>use on:MMM DD format to assign due date to task</li>
+		<li>use !# where # is a number to indicate importance</li>
+		<li>start with "-" to indicate unplanned task</li>
+		<li>start with "*" to indicate a starred task</li>
+		</ul>
+
+	<h2>Task Syntax</h2>
+		<ul>
+			<li>Save Tasklists</li>
+		</ul>
+	</section><!-- / -->
 	<section id="command">
 		
 	</section><!-- / -->
+		<section id="save-tasklist" class="save-task-list form">
+		<h2>Save Task List</h2>
+		<form action="#" method="get" id="save-tasklist-form" accept-charset="utf-8">
+		<input type="text" id="tasklist-name-input" name="tasklist-name-input" value="" placeholder="" >
+		<label for="save-tasklist">Enter the name for tasklist</label>
+		<button type="submit">Save</button>
+		 </form>	
+		</section>
 		<section class="add-task form">
 		<header>
 			<h2>Add task</h2>
@@ -565,6 +759,7 @@
 				<input type="text" list="tasksDataList" id="add-time" name="add-time" value="" placeholder="Enter Time entry" accesskey="n">
 				<input type="text" name="time[edit]" id="time_edit" list="timeValues" value="" placeholder="">
 				<label for="add-time">Enter the length of time and quick description e.g. ".5h Coding" or "2h Documentation" </label> 
+				<textarea name="time-entry-comments" id="time-entry-comments"></textarea>	
 				<label><input type="checkbox" name="completed" value="1"> Completed</label>
 				<button type="submit">Save</button>
 				<datalist id="timeValues">
@@ -775,7 +970,15 @@
 			</header><!-- /header -->		
 				
 			</article><!-- / -->
-			
+			<footer>
+
+				<ul class="tasklist-actions">
+			    <li><a class="clear-completed" href="#" title="">Clear Completed</a></li>
+			    <li><a class="reorder" href="#" title="">Reorder</a></li>
+			    <li><a class="save-tasklist" href="#" title="">Save Tasklist</a></li>
+				</ul>
+
+			</footer>	
 		</section><!-- / -->
 		
 		<section id="contexts" class="">
@@ -797,6 +1000,19 @@
 				<li class="project"><a href="#" title="">Learn Quantum Physics</a></li>
 				<li class="project"><a href="#" title="">Build Tree House</a></li>
 				<li class="project"><a href="#" title="">World Peace</a></li>
+				
+				<!-- <li class="project"><a href="#" title="">My Work</a></li>
+				
+				<li class="project"><a href="#" title="">Misc</a></li>
+			</ul><!-- / -->
+		</section>
+		<section id="tasklists" class="module">
+			<header>
+				<h2>Tasklists</h2>
+			</header><!-- /header -->
+			<ul id="" class="list">
+				<li class="tasklist"><a href="#tasklist-Last Tasks" title="">Last Tasks</a></li>
+				
 				
 				<!-- <li class="project"><a href="#" title="">My Work</a></li>
 				

@@ -18,6 +18,30 @@ body.command-mode {
 
 }
 
+ #help {
+ 	
+ 	padding:20px;
+ 	border-radius:5px;
+ 	border:1px solid #ddd;
+ 	margin:40px ;
+ 	font-size:80%;
+ 	background:#def;
+
+ }
+
+#help h2 {
+	
+	margin:10px 0;
+
+}
+#help ul{
+	
+	margin-left: 20px;
+
+
+} 
+
+
  #command {
 	
 	display:none;
@@ -89,8 +113,8 @@ body.command-mode {
  				
  			}
 
-			h1 { font-size:90%; margin:5px;color:#222; }
-			h2 { font-size:70%; color:#444; margin:5px;}
+		header	h1 { font-size:90%; margin:5px;color:#222; }
+		header	h2 { font-size:70%; color:#444; margin:5px;}
 
 			#container{
 				
@@ -138,7 +162,7 @@ body.command-mode {
 				
 				color:#fd4444;
 			}
-
+			.form,
 			.add-task,
 			#enter-time {
 
@@ -150,7 +174,7 @@ body.command-mode {
 				
 				display:none;
 
-				background-color: whiteSbackground-color:#ddd;
+			
 				margin-bottom: 20px;
 				padding: 10px;
 				min-height: 20px;
@@ -181,6 +205,26 @@ body.command-mode {
 
 			}
 
+			.tasklist-actions {
+				margin:20px;
+				float:right;
+			}
+			.tasklist-actions li {
+				
+			list-style-type:none;
+			display:inline-block;
+			
+
+			}
+
+			.tasklist-actions li a {
+				font-size:80%;
+				padding:5px;
+				background:#fff;
+				border:1px solid #ddd;
+				border-radius:5px;
+			    color:999;
+			}
 			
 
 		 input[type=text]
@@ -537,14 +581,14 @@ body.command-mode {
 				box-shadow:0 0 5px #aaa;
 
 			}
-
+			.module li,
 			#contexts li,
 			#projects li
 			 {
 				list-style-type:none;
 
 			}
-
+			.module .list li,
 			.context,
 			.project
 			 {
@@ -556,7 +600,7 @@ body.command-mode {
 					
 
 			}
-
+			.module .list li a,
 			.context a,
 			.project a
 			{
@@ -569,7 +613,15 @@ body.command-mode {
 				text-transform:uppercase;
 				font-weight:bold;
 				color:666;
+				-webkit-transition: all .25s ease-in-out;
 
+			}
+
+			.module .list li a:hover,
+			.context a:hover,
+			.project a:hover {
+				
+				background:#CEF;
 			}
 
 			.context.active,
@@ -625,6 +677,7 @@ margin-right: 0px;
 min-width: 420px;
 }
 
+.module,
 .theme-gr #contexts,
 .theme-gr #projects {
 margin: 10px;
@@ -633,6 +686,8 @@ border-radius:5px;
 box-shadow: 0 0 5px #aaa;
 float: right;
 width: 35.5%;
+clear:right;
+
 /*box-shadow:
 				0 1px 0 #CCC,
 				 0 2px 0 #C9C9C9,
@@ -646,7 +701,7 @@ width: 35.5%;
 				 0 10px 10px rgba(0, 0, 0, .2),
 				 0 20px 20px rgba(0, 0, 0, .15);*/
 }
-
+.module h2,
 #contexts h2,
 #projects h2,
  {
