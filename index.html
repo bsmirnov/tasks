@@ -18,14 +18,27 @@
 		    };
 		    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		}
+<<<<<<< HEAD
 		var commandMode=false;
 		var today=new Date();
+=======
+
+
+		var commandMode=false;
+		var today=new Date();
+
+>>>>>>> refs/heads/gh-pages
 		var tasks = {
 			settings: {
 				subtasks:false,
 				session:guidGenerator(),
 				contenteditable:false,
+<<<<<<< HEAD
 				debug:true
+=======
+				debug:true,
+				draggable:true
+>>>>>>> refs/heads/gh-pages
 			},
 			themes: [],
 			contexts: [],
@@ -40,6 +53,12 @@
 				$("body").toggleClass("command-mode");
 
 			},
+<<<<<<< HEAD
+=======
+			dragSource: null,
+
+
+>>>>>>> refs/heads/gh-pages
 
 			metas:[
 					{
@@ -72,7 +91,19 @@
 
 			init: function(){
 
+<<<<<<< HEAD
 				tasks.loadLocal();
+=======
+
+						
+
+
+				tasks.loadLocal();
+
+				//Dragable
+				tasks.dragableOn();	
+			
+>>>>>>> refs/heads/gh-pages
 				$("link[href='depth.css']").attr("media","screen");
 				//$(".task").on("click",);
 				$(document).on("click", ".task", function(event){
@@ -81,6 +112,7 @@
 					
 				});
 
+<<<<<<< HEAD
 				$(document).on("click", ".tasklist", function(event){
 					event.preventDefault();
 
@@ -88,6 +120,33 @@
 					console.log(id);
 					tasks.loadTasklist(id);
 					$("#tasks").attr("rel", id );					
+=======
+				
+
+				$(document).on("click", ".reorder", function(event){
+					event.preventDe
+					$(".task").removeClass("selected");$(this).addClass("selected");
+					tasks.display($(".history",this));
+					
+				});
+
+				$(document).on("click", ".tasklist", function(event){
+					event.preventDefault();
+					if($(this).is(".new-tasklist")){
+						
+						tasks.newTasklist();
+						return;
+
+
+					}
+					else 
+					{
+					var id = $(this).attr("id");
+					console.log(id);
+					tasks.loadTasklist(id);
+					$("#tasks").attr("rel", id );	
+					}				
+>>>>>>> refs/heads/gh-pages
 				});
 
 				$(document).on("click", ".tick", function(event){$(this).closest(".task").toggleClass("complete");});
@@ -169,6 +228,10 @@
 				tasks.loadTasks();
 				tasks.loadContexts();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/gh-pages
 				for (var item in tasks.metas) {
 				  //console.log(tasks.metas[item]["name"]);
 				}
@@ -178,6 +241,96 @@
 				}
 			},
 
+<<<<<<< HEAD
+=======
+			handleDragStart: function(e) {
+				$(this).addClass('drag');  // this / e.target is the source node.
+
+				tasks.dragSource = this;
+				e.dataTransfer.effectAllowed = 'move';
+			    e.dataTransfer.setData('text/html', this.innerHTML);
+					  
+			},
+
+			handleDragOver: function (e) {
+			  if (e.preventDefault) {
+			    e.preventDefault(); // Necessary. Allows us to drop.
+			  }
+
+			
+
+			  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+			  return false;
+			},
+
+			handleDragEnter: function(e) {
+			  // this / e.target is the current hover target.
+			  $(this).addClass('over');
+			},
+
+			handleDragLeave: function(e) {
+			  $(this).removeClass('over');  // this / e.target is previous target element.
+			},
+
+			handleDrop: function(e) {
+			  // this / e.target is current target element.
+
+			  if (e.stopPropagation) {
+			    e.stopPropagation(); // stops the browser from redirecting.
+			  }
+
+			 // Don't do anything if dropping the same column we're dragging.
+			  if (tasks.dragSource != this) {
+			    // Set the source column's HTML to the HTML of the columnwe dropped on.
+			    tasks.dragSource.innerHTML = this.innerHTML;
+			    this.innerHTML = e.dataTransfer.getData('text/html');
+			  }
+
+			  return false;
+			},
+
+			handleDragEnd: function(e) {
+			  // this/e.target is the source node.
+
+			  $(".task").removeClass('drag');
+			  $(".task").removeClass('over');
+			  
+			},
+
+			dragableOn: function(){
+				$("#container").addClass("dragable-on");
+				if(tasks.settings.draggable)
+				{
+					$(".task:not(.new-task)").attr("draggable",true);
+					$(".context a").attr("draggable",true);
+				}
+
+				
+
+				$(".task").each(function(){
+					this.addEventListener('dragstart', tasks.handleDragStart, false);
+					this.addEventListener('dragstart', tasks.handleDragStart, false);
+					this.addEventListener('dragenter', tasks.handleDragEnter, false);
+					this.addEventListener('dragover', tasks.handleDragOver, false);
+					this.addEventListener('dragleave', tasks.handleDragLeave, false);
+					this.addEventListener('drop', tasks.handleDrop, false);
+  					this.addEventListener('dragend', tasks.handleDragEnd, false);
+				});
+
+			},
+
+			dragableOff: function(){
+				
+				if(tasks.settings.draggable)
+				{
+					$(".task:not(.new-task)").attr("draggable",false);
+					$(".context a").attr("draggable",false);
+				}
+
+			},
+
+>>>>>>> refs/heads/gh-pages
 			loadTasklist:function(name){
 				if(localStorage.getItem(name))
 				{
@@ -186,7 +339,11 @@
 					console.log("Load Tasklist");
 				}
 
+<<<<<<< HEAD
 				
+=======
+				tasks.saveLocal();
+>>>>>>> refs/heads/gh-pages
 			},
 
 			saveTasklist:function(name){
@@ -196,14 +353,34 @@
 
 				if(!localStorage.getItem(name)){
 
+<<<<<<< HEAD
 				localStorage.setItem(id, $('#tasks').html());
 				$("#tasklists ul").append("<li class='tasklist' id='"+id+"'><a href='#"+id+"'>"+name+"</a></li>");
 				console.log(id);
 				}
+=======
+				
+				}
+
+				localStorage.setItem(id, $('#tasks').html());
+				$("#tasklists ul").append("<li class='tasklist' id='"+id+"'><a href='#"+id+"'>"+name+"</a></li>");
+				console.log(id);
+
+				tasks.saveLocal();
+>>>>>>> refs/heads/gh-pages
 
 
 			},
 
+<<<<<<< HEAD
+=======
+			newTasklist: function(){
+				
+				$(".task:not(.new-task)").remove();
+
+			},
+
+>>>>>>> refs/heads/gh-pages
 			switchContext:function(){
 				if($(".context.active").length){
 				$(".context.active").removeClass("active").next().addClass("active");
@@ -221,7 +398,11 @@
 			saveLocal: function(){
 				
 				localStorage.setItem('tasks', $('#tasks').html());
+<<<<<<< HEAD
 				localStorage.setItem('taskslists', $('#tasklists').html());
+=======
+				localStorage.setItem('tasklists', $('#tasklists').html());
+>>>>>>> refs/heads/gh-pages
 				console.log("Tasks Saved");
 			},
 			loadLocal: function() {
@@ -233,15 +414,28 @@
 					$("#tasks").html(localStorage.getItem("tasks"));
 
 				}
+<<<<<<< HEAD
 				if(localStorage.getItem("taskslists"))
 				{
 					
 					$("#tasklists").html(localStorage.getItem("tasklists"));
+=======
+				if(localStorage.tasklists)
+				//if(localStorage.getItem("tasklists"))
+				{
+					
+					//$("#tasklists").html(localStorage.getItem("tasklists"));
+					$("#tasklists").html(localStorage.tasklists);
+>>>>>>> refs/heads/gh-pages
 
 				}
 				console.log("Tasks Loaded");
 
 			},
+<<<<<<< HEAD
+=======
+			
+>>>>>>> refs/heads/gh-pages
 			loadTasks: function(){
 				//Load tasks start with fixture
 			},
@@ -550,7 +744,11 @@
 	 				case 13: // enter
 	 				if($("#tasks").is(".editable"));
 	 				{
+<<<<<<< HEAD
 	 					break;
+=======
+	 					//break;
+>>>>>>> refs/heads/gh-pages
 	 				}
 	 				if($(".selected").is(".new-task"))
 	 				{
@@ -1004,19 +1202,31 @@
 				<!-- <li class="project"><a href="#" title="">My Work</a></li>
 				
 				<li class="project"><a href="#" title="">Misc</a></li>
+<<<<<<< HEAD
 			</ul><!-- / -->
+=======
+				<!-- / -->
+			</ul>
+>>>>>>> refs/heads/gh-pages
 		</section>
 		<section id="tasklists" class="module">
 			<header>
 				<h2>Tasklists</h2>
 			</header><!-- /header -->
 			<ul id="" class="list">
+<<<<<<< HEAD
 				<li class="tasklist"><a href="#tasklist-Last Tasks" title="">Last Tasks</a></li>
 				
 				
 				<!-- <li class="project"><a href="#" title="">My Work</a></li>
 				
 				<li class="project"><a href="#" title="">Misc</a></li>
+=======
+				<li class="tasklist new-tasklist"><a href="#tasklist-Last" title="">NEW LIST</a></li>
+				
+				
+				
+>>>>>>> refs/heads/gh-pages
 			</ul><!-- / -->
 		</section>
 		<section id="display">

@@ -4,6 +4,10 @@ body {
 				-webkit-transition: all 1s ease-in-out;
 				background:#7B8996;
 				background:#fff;
+<<<<<<< HEAD
+=======
+				background: #F0F0F0;
+>>>>>>> refs/heads/gh-pages
 			}
 
 body.command-mode {
@@ -540,6 +544,21 @@ body.command-mode {
 				border:2px dashed #999;
 			}
 
+<<<<<<< HEAD
+=======
+			.over {
+				
+				background:transparent;
+
+			}
+
+			.drag {
+				
+				background:#eee;
+
+			}
+
+>>>>>>> refs/heads/gh-pages
 			.new-task.selected header {
 				
 				margin:3px;
