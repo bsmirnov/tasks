@@ -290,7 +290,7 @@
 			},
 
 			dragableOff: function(){
-				
+				$("#container").removeClass("dragable-on");
 				if(tasks.settings.draggable)
 				{
 					$(".task:not(.new-task)").attr("draggable",false);
@@ -1107,9 +1107,9 @@
 			<footer>
 
 				<ul class="tasklist-actions">
-			    <li><a class="clear-completed" href="#" title="">Clear Completed</a></li>
-			    <li><a class="reorder" href="#" title="">Reorder</a></li>
-			    <li><a class="save-tasklist" href="#" title="">Save Tasklist</a></li>
+			    <li><a class="clear-completed depth " href="#" title="">Clear Completed</a></li>
+			    <li><a class="reorder depth" href="#" title="">Reorder</a></li>
+			    <li><a class="save-tasklist depth" href="#" title="">Save Tasklist</a></li>
 				</ul>
 
 			</footer>	

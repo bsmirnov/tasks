@@ -225,6 +225,7 @@ body.command-mode {
 				border:1px solid #ddd;
 				border-radius:5px;
 			    color:999;
+			    text-decoration:none;
 			}
 			
 
@@ -749,4 +750,8 @@ opacity:.5;
 				 0 3px 5px rgba(0, 0, 0, .2),
 				 0 5px 10px rgba(0, 0, 0, .25),
 				 0 10px 10px rgba(0, 0, 0, .2),
-				 0 20px 20px rgba(0, 0, 0, .15);*/
+				 0 20px 20px rgba(0, 0, 0, .15);*/}
+
+.dragable-on .task {
+	background:#cfe;
+}				 
