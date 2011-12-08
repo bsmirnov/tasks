@@ -4,6 +4,7 @@ body {
 				-webkit-transition: all 1s ease-in-out;
 				background:#7B8996;
 				background:#fff;
+				background: #F0F0F0;
 			}
 
 body.command-mode {
@@ -538,6 +539,18 @@ body.command-mode {
 			{
 				background:#efc;
 				border:2px dashed #999;
+			}
+
+			.over {
+				
+				background:transparent;
+
+			}
+
+			.drag {
+				
+				background:#eee;
+
 			}
 
 			.new-task.selected header {
