@@ -1,8 +1,8 @@
 function guidGenerator() {
-		    var S4 = function() {
-		       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-		    };
-		    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+				var S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+				};
+		return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 		}
 
 
@@ -30,6 +30,7 @@ function guidGenerator() {
 			command: "",
 			trackCommand:function(){
 				$("body").toggleClass("command-mode");
+				$("#command-input").focus();
 
 			},
 			dragSource: null,
@@ -68,7 +69,7 @@ function guidGenerator() {
 			init: function(){
 
 
-						
+				document.onkeyup = tasks.keyCheck;			
 
 
 				tasks.loadLocal();
@@ -84,8 +85,10 @@ function guidGenerator() {
 					
 				});
 
+				$(document).on("click", ".context", function(){
+					$(".context").removeClass("active");$(this).addClass("active")
+				});
 				
-
 				$(document).on("click", ".reorder", function(event){
 
 					event.preventDefault();
@@ -128,7 +131,7 @@ function guidGenerator() {
 					var txt = $("#add-task-input").val().trim();
 
 					//console.log(tasks.parseTask(txt).task);
-					if(tasks.parseTask(txt).task.trim()!=""){
+					if(tasks.parseTask(txt).task.trim()!==""){
 					tasks.addTask(tasks.parseTask(txt).task,tasks.parseTask(txt).meta);
 					}
 
@@ -140,7 +143,7 @@ function guidGenerator() {
 					var txt = $("#save-tasklist").val().trim();
 
 					//console.log(tasks.parseTask(txt).task);
-					if(tasks.parseTask(txt).task.trim()!=""){
+					if(tasks.parseTask(txt).task.trim()!==""){
 					tasks.addTask(tasks.parseTask(txt).task,tasks.parseTask(txt).meta);
 					}
 
@@ -167,9 +170,9 @@ function guidGenerator() {
 				$("#save-tasklist-form").on("submit",function(e){
 					e.preventDefault();
 					var name = $("#tasklist-name-input").val().trim();
-					{
+					
 						tasks.saveTasklist(name);
-					}
+					
 					$("#add-task-input").val("").blur();
 					$("#save-tasklist").hide();
 				
@@ -187,6 +190,18 @@ function guidGenerator() {
 					
 					$("#save-tasklist").show();
 					
+
+				});
+
+				$(document).on("click", ".add-task",function(){
+					
+					tasks.addTaskActivate();
+
+				});
+
+				$(document).on("click", ".local-storage-clear",function(){
+					
+					tasks.localStorageClear();
 
 				});
 
@@ -320,6 +335,11 @@ function guidGenerator() {
 
 			},
 
+			localStorageClear: function(){
+				localStorage.clear();
+				console.log("Local Storage Cleared");
+			},
+
 			loadTasklist:function(name){
 				if(localStorage.getItem(name))
 				{
@@ -407,6 +427,11 @@ function guidGenerator() {
 				$.each(tasks.contexts, function(index,value){
 					$("#contexts .list").append("<li class='context'><a href='#"+value+"'>"+value+"</li>");
 				});
+			},
+
+			addTaskActivate: function(){
+				$(".add-task").show("fast");
+	 			$("#add-task-input").focus();
 			},
 
 			addTask: function(name, meta){
@@ -567,7 +592,166 @@ function guidGenerator() {
 			{
 				tasks.settings.command = key;
 				console.log(key);
+			},
+
+			keyCheck: function(e)
+			{
+			   
+			   tasks.saveLocal();
+			   
+
+			   var KeyID = (window.event) ? event.keyCode : e.keyCode;
+
+			   if(!$("input").is(":focus")){
+
+			   var index = $(".task").index($(".task.selected"));
+	 			
+	 		   var len = $(".task").length;	
+
+	 		   
+
+			   switch(KeyID)
+			   {
+	 				
+	 				
+
+	 				case 192: // Tilde
+	 				$(".add-task").slideDown("fast");
+
+	 				//If there is a context that is selected add it to task entry
+	 				if($("#contexts .active").length){
+	 				$("#add-task-input").val("@"+$("#contexts .active").text().replace(" ","_"));
+	 				}
+	 				$("#add-task-input").focus();
+	 				break;
+	 				case 220: // Back Slash
+	 				$("#enter-time").slideToggle("fast");
+	 				$("#add-time").val($(".selected header:first").text().trim());
+	 				$("#time_edit").focus();
+	 				break;
+
+	 				case 191:
+	 				$("#help").slideToggle("fast");
+	 				break;
+
+	 				case 40:
+	 				case 74: //Down
+	 				if($(".selected").length)
+	 				{
+	 				$(".selected").next().click();
+	 				}
+	 				else {
+	 					$(".task:first").addClass("selected");
+	 				}
+	 				break;
+	 				case 38:
+	 				case 75: //Up
+	 				$(".selected").prev(".task").click();
+	 				break;
+
+	 				case 32: //Space
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					//break;
+	 				}
+	 				if($(".selected").is(".complete")){
+
+	 					$(".selected").removeClass("complete");//.prependTo("#tasks");//.prependTo("#tasks");
+
+	 				}
+	 				else 
+	 				{
+	 				if(!$(".selected").is(".new-task") ) {
+	 				$(".selected").addClass("complete");//.appendTo("#tasks").removeClass("selected");
+	 				//$(".task:first").addClass("selected");
+	 					}
+	 				//$(".selected").find("log-time a").focus();
+	 				//$("#enter-time").slideDown();
+					//$("#add-time").val($(".selected>header").text().trim()).focus();
+					}
+	 				break;
+	 				case 9: //tab
+	 				tasks.switchContext();
+	 				break;
+	 				case 13: // enter
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					//break;
+	 				}
+	 				if($(".selected").is(".new-task"))
+	 				{
+	 					tasks.addTaskActivate();
+	 				
+	 				}
+	 				else
+	 				{
+	 					//$("#enter-time").slideToggle("fast");
+	 					//$("#add-time").focus();
+
+	 					$("#enter-time").slideToggle("fast");
+		 				$("#add-time").val($(".selected header:first").text().trim());
+		 				$("#time_edit").focus();
+	 				}
+	 				break;
+	 				//Esc
+	 				case 27:
+	 				if($("#tasks").is(".editable"));
+	 				{
+	 					tasks.disableEditable();
+	 					break;
+	 				}
+	 				$(".selected").removeClass("selected");
+	 				break;
+
+	 				// :
+	 				case 186:
+	 				commandMode = true;
+	 				tasks.trackCommand();
+	 				break;
+
+	 				case 68:
+	 				if(!$("#tasks").is(".editable") && !$(".selected").is(".new-task") && !$("input").is(":focus") && $(".task.selected").length)
+	 				{
+	 					
+	 					console.log(KeyID);
+	 					if(tasks.getLastKey() == KeyID)
+	 					{
+	 						tasks.deleteTask($(".task.selected"));
+	 					}
+	 				}
+
+			   }
 			}
+			else
+			{
+				//Esc
+				if(KeyID==27)
+				{
+					
+					if($("input").is(":focus"))
+					{
+					$("input").blur();
+					$(".add-task:visible, #enter-time:visible").hide();
+					}
+					else
+					{
+						$(".selected").removeClass("selected");
+					}
+
+					if($("#tasks").is(".editable"));
+	 				{
+	 					
+	 				}
+				}
+
+			}
+
+			tasks.setLastKey(KeyID);
+			
+		}
+
+
+
 
 
 

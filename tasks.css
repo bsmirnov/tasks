@@ -38,6 +38,24 @@ body.command-mode {
 
  }
 
+#appMenu {
+	float:right;
+}
+#appMenu li {
+	list-style-type:none;
+	float:left;
+	margin:5px;
+}
+
+#appMenu li a {
+	font-size:10px;
+	background:#fff;
+	display:block;
+	padding:5px;
+	box-shadow:0 0 0 1px #ccc;
+	border-radius:5px;
+}
+
 #help h2 {
 	
 	margin:10px 0;
@@ -58,6 +76,20 @@ body.command-mode {
 	height:0px;
 	color:#ddd;
 	line-height:30px;
+
+}
+
+#command-input {
+	width:auto;
+	outline: none;
+	background:transparent;
+	border:none;
+	font-size:12px;
+	color:#eee;
+}
+#command-input:focus {
+	outline:none
+	box-shadow:none;
 
 }
 
@@ -412,7 +444,7 @@ body.command-mode {
 
 			}
 */
-			.selected,
+			.selected
 			
 			 {
 				

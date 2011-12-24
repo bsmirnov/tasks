@@ -16,245 +16,37 @@
 		<script type="text/javascript" charset="utf-8">
 
 			
-			document.onkeyup = KeyCheck;       
+			       
  			
 			
 
-		$(function() {
-			
-			tasks.init();
-
-			$("#help").hide();
-			
-
-			$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
-
-
-			$("#add-time").focus(function(){
+			$(function() {
 				
-				getTasks();
+				tasks.init();
 
-			});
+				$("#help").hide();
+				
+
+				$(".context").click(function(){$(".context").removeClass("active");$(this).addClass("active")});
 
 
-
-		});
-
-		function setCursor(node,pos){
-
-	    var node = (typeof node == "string" || node instanceof String) ? document.getElementById(node) : node;
-
-		    if(!node){
-		        return false;
-		    }else if(node.createTextRange){
-		        var textRange = node.createTextRange();
-		        textRange.collapse(true);
-		        textRange.moveEnd(pos);
-		        textRange.moveStart(pos);
-		        textRange.select();
-		        return true;
-		    }else if(node.setSelectionRange){
-		        node.setSelectionRange(pos,pos);
-		        return true;
-		    }
-
-		    return false;
-		}
-
-		function KeyCheck(e)
-			{
-			   
-			   tasks.saveLocal();
-			   
-
-			   var KeyID = (window.event) ? event.keyCode : e.keyCode;
-
-			   if(!$("input").is(":focus")){
-
-			   var index = $(".task").index($(".task.selected"));
-	 			
-	 		   var len = $(".task").length;	
-
-	 		   
-
-			   switch(KeyID)
-			   {
-	 				
-	 				
-
-	 				case 192: // Tilde
-	 				$(".add-task").slideDown("fast");
-
-	 				//If there is a context that is selected add it to task entry
-	 				if($("#contexts .active").length){
-	 				$("#add-task-input").val("@"+$("#contexts .active").text().replace(" ","_"));
-	 				}
-	 				$("#add-task-input").focus();
-	 				break;
-	 				case 220: // Back Slash
-	 				$("#enter-time").slideToggle("fast");
-	 				$("#add-time").val($(".selected header:first").text().trim());
-	 				$("#time_edit").focus();
-	 				break;
-
-	 				case 191:
-	 				$("#help").slideToggle("fast");
-	 				break;
-
-	 				case 40:
-	 				case 74: //Down
-	 				if($(".selected").length)
-	 				{
-	 				$(".selected").next().click();
-	 				}
-	 				else {
-	 					$(".task:first").addClass("selected");
-	 				}
-	 				break;
-	 				case 38:
-	 				case 75: //Up
-	 				$(".selected").prev(".task").click();
-	 				break;
-
-	 				case 32: //Space
-	 				if($("#tasks").is(".editable"));
-	 				{
-	 					//break;
-	 				}
-	 				if($(".selected").is(".complete")){
-
-	 					$(".selected").removeClass("complete");//.prependTo("#tasks");//.prependTo("#tasks");
-
-	 				}
-	 				else 
-	 				{
-	 				if(!$(".selected").is(".new-task") ) {
-	 				$(".selected").addClass("complete");//.appendTo("#tasks").removeClass("selected");
-	 				//$(".task:first").addClass("selected");
-	 					}
-	 				//$(".selected").find("log-time a").focus();
-	 				//$("#enter-time").slideDown();
-					//$("#add-time").val($(".selected>header").text().trim()).focus();
-					}
-	 				break;
-	 				case 9: //tab
-	 				tasks.switchContext();
-	 				break;
-	 				case 13: // enter
-	 				if($("#tasks").is(".editable"));
-	 				{
-	 					//break;
-	 				}
-	 				if($(".selected").is(".new-task"))
-	 				{
-	 					$(".add-task").slideToggle("fast");
-	 					$("#add-task-input").focus();
-	 				
-	 				}
-	 				else
-	 				{
-	 					//$("#enter-time").slideToggle("fast");
-	 					//$("#add-time").focus();
-
-	 					$("#enter-time").slideToggle("fast");
-		 				$("#add-time").val($(".selected header:first").text().trim());
-		 				$("#time_edit").focus();
-	 				}
-	 				break;
-	 				//Esc
-	 				case 27:
-	 				if($("#tasks").is(".editable"));
-	 				{
-	 					tasks.disableEditable();
-	 					break;
-	 				}
-	 				$(".selected").removeClass("selected");
-	 				break;
-
-	 				// :
-	 				case 186:
-	 				commandMode = true;
-	 				tasks.trackCommand();
-	 				break;
-
-	 				case 68:
-	 				if(!$("#tasks").is(".editable") && !$(".selected").is(".new-task") && !$("input").is(":focus") && $(".task.selected").length)
-	 				{
-	 					
-	 					console.log(KeyID);
-	 					if(tasks.getLastKey() == KeyID)
-	 					{
-	 						tasks.deleteTask($(".task.selected"));
-	 					}
-	 				}
-
-			   }
-			}
-			else
-			{
-				//Esc
-				if(KeyID==27)
-				{
+				$("#add-time").focus(function(){
 					
-					if($("input").is(":focus"))
-					{
-					$("input").blur();
-					$(".add-task:visible, #enter-time:visible").hide();
-					}
-					else
-					{
-						$(".selected").removeClass("selected");
-					}
+					getTasks();
 
-					if($("#tasks").is(".editable"));
-	 				{
-	 					
-	 				}
-				}
+				});
 
-			}
 
-			tasks.setLastKey(KeyID);
-			
-		}
 
-		function NextTask()
-		{
-			if(!$(".task.selected").length)
-			{
-				
-			}
-		}
-
-		function getTasks()
-		{
-			$("#tasksDataList").remove();
-			var tasks = [];
-			var datalist = $("<datalist id='tasksDataList' name='tasks'></datalist>");
-			$(".task.active").each(function(){
-				var txt = $("header:first",this).text().trim();
-				var opt = $("<option></option>");
-				$(opt).attr("label",txt).val(txt);
-				$(datalist).append(opt)
 			});
 
-			$("#enter-time").append(datalist);
 
-			
+		
 
+		
+	
 
-		}
-
-		function addTask()
-		{
-			
-
-		}
-
-		function logTime() 
-		{
-			
-		}
+		
 
 		</script>
 
@@ -278,6 +70,13 @@
 				
 			</ul><!-- / -->
 		</nav>	
+
+		<ul id="appMenu">
+
+				<li><a class="action local-storage-clear" href="#local-storage-clear" title="">Local Storage Clear</a></li>
+			    
+				
+		</ul>
 
 		<section class="help">
 			<ul>
@@ -316,7 +115,8 @@
 		</ul>
 	</section><!-- / -->
 	<section id="command">
-		
+		<input type="text" name="command" id="command-input" value="" placeholder="Enter Command - ? for help"> 
+		<button type="submit">Enter</button>
 	</section><!-- / -->
 		<section id="save-tasklist" class="save-task-list form">
 		<h2>Save Task List</h2>
@@ -385,18 +185,7 @@
 					</section><!-- / -->
 					
 					
-					<section class="meta">
-						<ul class="">
-							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
-							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
-							<li class="in-context"><a href="#" title="">@My Work</a></li>
-						
-							<li class="due-date"><a href="#" title="">Oct 15</a></li>
-							<li class="priority normal"><a href="#" title="">Normal</a></li>
-							<li class="action status"><a href="#" title="">Active</a></li>
-							<li class="action delete"><a href="#" title="">x</a></li>
-						</ul><!-- / -->
-					</section><!-- / -->
+					
 					<section class="history">
 					<header>
 						<h3>Task History</h3>
@@ -566,9 +355,11 @@
 			<footer>
 
 				<ul class="tasklist-actions">
-			    <li><a class="clear-completed depth " href="#" title="">Clear Completed</a></li>
-			    <li><a class="reorder depth" href="#" title="">Reorder</a></li>
-			    <li><a class="save-tasklist depth" href="#" title="">Save Tasklist</a></li>
+				
+			    <li><a class="clear-completed depth " href="#clear-completed" title="">Clear Completed</a></li>
+			    <li><a class="reorder depth" href="#reorder" title="">Reorder</a></li>
+			    <li><a class="save-tasklist depth" href="#save-tasklist" title="">Save Tasklist</a></li>
+			    <li><a class="add-task depth" href="#add-task" title="">Add Task</a></li>
 				</ul>
 
 			</footer>	
@@ -614,6 +405,20 @@
 		<section id="display">
 
 		</section>
+		<section id="templates">
+	    			<section class="meta">
+						<ul class="">
+							<li class="action complete"><a href="#" title=""><span>Complete</span></a></li>
+							<li class="action log-time"><a href="#" title=""><span>Log Time</span></a></li>
+							<li class="in-context"><a href="#" title="">@My Work</a></li>
+						
+							<li class="due-date"><a href="#" title="">Oct 15</a></li>
+							<li class="priority normal"><a href="#" title="">Normal</a></li>
+							<li class="action status"><a href="#" title="">Active</a></li>
+							<li class="action delete"><a href="#" title="">x</a></li>
+						</ul><!-- / -->
+					</section><!-- / -->
+	    </section>
 		</article><!-- / -->
 	</body>
 </html>
