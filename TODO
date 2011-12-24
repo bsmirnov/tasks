@@ -2,7 +2,7 @@ TODO
 
 These are general ideas some are more important then others, some will probably be dropped
 
-- Move Styles into theme and re-organize css
+
 - Combine CSS css rules that fit together
 - Switch to LESS or SASS
 - Move task parsing into module

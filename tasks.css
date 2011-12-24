@@ -6,6 +6,14 @@ body {
 				background:#fff;
 				background: #F0F0F0;
 			}
+@font-face{ 
+	font-family: 'WebSymbolsRegular';
+	src: url('/fonts/websymbols-regular-webfont.eot');
+	src: url('/fonts/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
+	     url('/fonts/websymbols-regular-webfont.woff') format('woff'),
+	     url('/fonts/websymbols-regular-webfont.ttf') format('truetype'),
+	     url('/fonts/websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
+	}
 
 body.command-mode {
 	
@@ -226,6 +234,7 @@ body.command-mode {
 				border-radius:5px;
 			    color:999;
 			    text-decoration:none;
+			    -webkit-transition: all .3s ease-in-out;
 			}
 			
 
@@ -317,6 +326,17 @@ body.command-mode {
 				-webkit-transition: all .5s ease-in-out;
 				}
 			
+			.drag-handle {
+				width: 13px;
+				height: 15px;
+				background: url(img/sprite.png) -3px -88px no-repeat;
+				position: absolute;
+				right: 5px;
+				top: 9px;
+				-webkit-transition: all .5s ease-in-out;
+				opacity: .5;
+				}
+
 			.complete .tick {
 				
 				background: url(img/sprite.png) -3px -37px no-repeat;
@@ -392,7 +412,9 @@ body.command-mode {
 
 			}
 */
-			.selected {
+			.selected,
+			
+			 {
 				
 				box-shadow:0 0 0 1px #999, 0px 1px 3px rgba(77,77,77,.25);
 			/*	box-shadow:
@@ -472,6 +494,7 @@ body.command-mode {
 				float:right;
 				opacity:1;
 				margin-top:9px;
+				margin-right:20px;
 
 			}
 
@@ -752,6 +775,15 @@ opacity:.5;
 				 0 10px 10px rgba(0, 0, 0, .2),
 				 0 20px 20px rgba(0, 0, 0, .15);*/}
 
-.dragable-on .task {
-	background:#cfe;
-}				 
+.dragable-on .task:not(.new-task),
+
+{
+	background: #ddd;
+}	
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}			 
